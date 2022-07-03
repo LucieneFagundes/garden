@@ -1,9 +1,10 @@
 import type { NextPage } from 'next'
-import { LockClosedIcon } from '@heroicons/react/outline'
+import { LockClosedIcon, PencilAltIcon } from '@heroicons/react/outline'
 import { Formik, Form, Field } from 'formik'
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import Dashboard from './dashboard';
+import Link from 'next/link';
 
 interface ISignIn {
   email: string;
@@ -28,7 +29,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <> 
+    <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
@@ -42,7 +43,7 @@ const Home: NextPage = () => {
           <Formik initialValues={initialValues} onSubmit={handleSignIn}>
             <Form className="mt-8 space-y-6" action="#" method="POST">
               <input type="hidden" name="remember" defaultValue="true" />
-              <div className="rounded-md shadow-sm -space-y-px">
+              <div className="rounded-md shadow-sm space-y-2">
                 <div>
                   <label htmlFor="email-address" className="sr-only">
                     Email address
@@ -53,7 +54,7 @@ const Home: NextPage = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="E-mail"
                   />
                 </div>
@@ -67,25 +68,20 @@ const Home: NextPage = () => {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Senha"
                   />
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                    Lembre-me
-                  </label>
+                <div className="text-sm">
+                  <Link href="/cadastro">
+                    <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                      Cadastre-se
+                    </a>
+                  </Link>
                 </div>
-
                 <div className="text-sm">
                   <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                     Esqueceu a senha?

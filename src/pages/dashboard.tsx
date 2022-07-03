@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
-import { Children, useContext } from "react";
+import { useContext } from "react";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../contexts/AuthContext";
 

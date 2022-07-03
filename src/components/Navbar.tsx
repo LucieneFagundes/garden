@@ -1,7 +1,9 @@
 import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-import { AuthContext } from '../contexts/AuthContext'
+import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline' 
+import Image from 'next/image'
+import avatar from '../public/avatar.jpg'
+
 
 
 // const user = {
@@ -10,6 +12,7 @@ import { AuthContext } from '../contexts/AuthContext'
 //     imageUrl:
 //         'https://github.com/LucieneFagundes.png',
 // }
+// let avatar = require("./src/public/avatar.png")
 
 const navigation = [
     { name: 'Dashboard', href: '#', current: true },
@@ -79,7 +82,7 @@ const Navbar = ({user}: any) => {
                                         <div>
                                             <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                                 <span className="sr-only">Open user menu</span>
-                                                <img className="h-8 w-8 rounded-full" src={user?.photo} alt="" />
+                                                <Image width={32} height={32} className="h-8 w-8 rounded-full" src={user?.photo ? user.photo : avatar} alt="avatar" />
                                             </Menu.Button>
                                         </div>
                                         <Transition
@@ -146,7 +149,7 @@ const Navbar = ({user}: any) => {
                         <div className="pt-4 pb-3 border-t border-gray-700">
                             <div className="flex items-center px-5">
                                 <div className="flex-shrink-0">
-                                    <img className="h-10 w-10 rounded-full" src={user?.photo} alt="" />
+                                    <Image width={40} height={40} className="h-10 w-10 rounded-full" src={user?.photo ? user.photo : avatar} alt="avatar" />
                                 </div>
                                 <div className="ml-3">
                                     <div className="text-base font-medium leading-none text-white">{user?.name}</div>
