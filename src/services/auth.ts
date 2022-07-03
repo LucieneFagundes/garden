@@ -13,11 +13,7 @@ type signUpRequestType = {
 export async function signInRequest(data: signInRequestType) {
   const response = await api.post("/login", data)
   return {
-    // todo : retornar id dentro do token pelo backend
-    token: {
-      token: response.data.token,
-      userId: response.data.user.id
-    },
+    token: response.data.token,
     user: response.data.user
   }
 }

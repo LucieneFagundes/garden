@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { signInRequest, signUpRequest } from "../services/auth";
-import { setCookie, parseCookies } from "nookies"
+import { setCookie, parseCookies, destroyCookie } from "nookies"
 import Router from "next/router";
 import { recoveryUser } from "../services/user-service";
 import { api } from "../services/api";
@@ -26,6 +26,7 @@ type AuthContextType = {
   user: User | null;
   signIn: (data: SignInType) => Promise<void>;
   signUp: (data: SignUpType) => Promise<void>;
+  logout: () => void;
 }
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -40,13 +41,11 @@ export function AuthProvider({ children }: any) {
 
     if (token) {
       const _token = JSON.parse(token);
-
-      recoveryUser(_token.userId).then(response => setUser(response));
+      recoveryUser(_token.id).then(response => setUser(response));
 
     }
   }, []);
 
-  //Função de login que retorna o token e o usuário do back-end
   async function signIn({ email, password }: SignInType) {
 
     const { token, user } = await signInRequest({
@@ -68,6 +67,14 @@ export function AuthProvider({ children }: any) {
 
   }
 
+  function logout(){
+
+    setUser(null);
+    destroyCookie( undefined, 'auth.token')
+    Router.push('/')
+
+  }
+
   function handleRedirect(token:any, user: any){
 
     setCookie(undefined, 'auth.token', JSON.stringify(token), {
@@ -82,7 +89,7 @@ export function AuthProvider({ children }: any) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, logout }}>
       {children}
     </AuthContext.Provider>
   )

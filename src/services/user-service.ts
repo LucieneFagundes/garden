@@ -4,7 +4,7 @@ import { api } from "./api";
 export async function recoveryUser(id: string){
   
   const dataUser = await api.get(`/user/${id}`);
-
+  
   const user =  {
     name: dataUser.data.name,
     email: dataUser.data.email,
