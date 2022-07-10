@@ -1,4 +1,6 @@
-import { api } from "./api";
+import { getAPIClient } from "./api";
+
+ 
 
 type signInRequestType = {
   email: string,
@@ -9,8 +11,10 @@ type signUpRequestType = {
   email: string;
   password: string;
 }
+const api = getAPIClient()
 
 export async function signInRequest(data: signInRequestType) {
+  
   const response = await api.post("/login", data)
   return {
     token: response.data.token,

@@ -22,7 +22,6 @@ export default function Cadastro() {
 
   async function handleSignUp({ name, email, password }: ISingUp) {
     await signUp({ name, email, password })
-    console.log({ name, email, password })
   }
 
 

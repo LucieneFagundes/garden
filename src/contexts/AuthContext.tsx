@@ -3,7 +3,7 @@ import { signInRequest, signUpRequest } from "../services/auth";
 import { setCookie, parseCookies, destroyCookie } from "nookies"
 import Router from "next/router";
 import { recoveryUser } from "../services/user-service";
-import { api } from "../services/api";
+import { getAPIClient } from "../services/api";
 
 type SignInType = {
   email: string;
@@ -16,6 +16,7 @@ type SignUpType = {
 }
 
 type User = {
+  id: string;
   name: string;
   email: string;
   photo: string;
@@ -47,15 +48,14 @@ export function AuthProvider({ children }: any) {
   }, []);
 
   async function signIn({ email, password }: SignInType) {
-
     const { token, user } = await signInRequest({
       email,
       password
     });
 
     handleRedirect(token, user);
-
   }
+
   async function signUp({name, email, password}: SignUpType) {
     const { token , user } = await signUpRequest({
       name,
@@ -64,18 +64,16 @@ export function AuthProvider({ children }: any) {
     });
 
     handleRedirect(token, user);
-
   }
 
   function logout(){
-
     setUser(null);
     destroyCookie( undefined, 'auth.token')
-    Router.push('/')
-
+    Router.push('/login')
   }
 
   function handleRedirect(token:any, user: any){
+    const api = getAPIClient()
 
     setCookie(undefined, 'auth.token', JSON.stringify(token), {
       maxAge: 60 * 60 * 24 * 7, // 7D
@@ -84,8 +82,7 @@ export function AuthProvider({ children }: any) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token.token}`;
 
     setUser(user)
-    Router.push('/dashboard');
-
+    Router.push('/');
   }
 
   return (

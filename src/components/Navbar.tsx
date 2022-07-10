@@ -23,9 +23,9 @@ const navigation = [
   { name: 'Reports', href: '#', current: false },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Meu perfil', href: '#' },
+  { name: 'Configurações', href: '#' },
+  { name: 'Sair', href: '#' },
 ]
 
 function classNames(...classes: string[]) {
@@ -33,8 +33,12 @@ function classNames(...classes: string[]) {
 }
 
 
-const Navbar = ({ user }: any) => {
+export default function Navbar({ user }: any) {
   const { logout } = useContext(AuthContext);
+
+
+
+  
   function handleLogout() {
     logout();
   }
@@ -103,27 +107,29 @@ const Navbar = ({ user }: any) => {
                     >
                       <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col">
                         <Menu.Item >
-                          <div className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
-                            <button>Seu perfil</button>
-                          </div>
+                          <button className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
+                            Seu perfil
+                          </button>
                         </Menu.Item>
                         <Menu.Item >
-                          <div className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
-                            <button>Configurações</button>
-                          </div>
+                          <button
+                            className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
+                            Configurações
+                          </button>
                         </Menu.Item>
                         <Menu.Item >
-                          <div className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
-                            <button onClick={handleLogout}>Sair</button>
-                          </div>
+                          <button onClick={handleLogout}
+                            className='p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300'>
+                            Sair
+                          </button>
                         </Menu.Item>
-
                       </Menu.Items>
                     </Transition>
                   </Menu>
                 </div>
               </div>
               <div className="-mr-2 flex md:hidden">
+
                 {/* Mobile menu button */}
                 <Disclosure.Button className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span className="sr-only">Open main menu</span>
@@ -176,6 +182,7 @@ const Navbar = ({ user }: any) => {
                   <Disclosure.Button
                     key={item.name}
                     as="a"
+                    onClick={()=>{}}
                     href={item.href}
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                   >
@@ -190,5 +197,3 @@ const Navbar = ({ user }: any) => {
     </Disclosure>
   </>
 }
-
-export default Navbar;
