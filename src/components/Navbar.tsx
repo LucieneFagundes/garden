@@ -16,11 +16,11 @@ import { AuthContext } from '../contexts/AuthContext'
 // let avatar = require("./src/public/avatar.png")
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Home', href: '/', current: true },
+  { name: 'Plantas', href: '/plants', current: false },
+  // { name: 'Projects', href: '#', current: false },
+  // { name: 'Calendar', href: '#', current: false },
+  // { name: 'Reports', href: '#', current: false },
 ]
 const userNavigation = [
   { name: 'Meu perfil', href: '#' },
