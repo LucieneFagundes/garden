@@ -1,12 +1,19 @@
 import { getAPIClient } from "./api";
 
-interface IData {
+interface ICreatePlant {
+  name: string;
+  species?: string;
+  notes?: string
+  photo?: string | ArrayBuffer;
+  userId: string;
+}
+
+interface IUpdatePlant {
   id: string;
   name: string;
   species: string;
   notes: string
   photo: string;
-
 }
 //REQUISIÇÃO DE TODAS AS PLANTAS DO USUÁRIO
 export async function getPlantsRequest(id: string, ctx?: any) {
@@ -17,8 +24,13 @@ export async function getPlantsRequest(id: string, ctx?: any) {
   return data;
 
 }
+//REQUISIÇÃO DE CRIAÇÃO DE PLANTA
+export async function setNewPlant(plant: ICreatePlant, ctx?: any) {
+  const api = getAPIClient(ctx);
+  await api.post("/plant", plant)
+}
 
-//REQUISIÇÃO DE PLANTA POR ID
+//REQUISIÇÃO DE ENCONTRAR PLANTA POR ID
 export async function getPlantByIdRequest(id: string, ctx?: any) {
   const api = getAPIClient(ctx);
   const { data } = await api.get(`/plant/${id}`);
@@ -26,9 +38,9 @@ export async function getPlantByIdRequest(id: string, ctx?: any) {
 }
 
 //REQUISIÇÃO DE UPDATE DA PLANTA
-export async function setPlantUpdate(plant: IData, ctx?: any) {
+export async function setPlantUpdate(data: IUpdatePlant, ctx?: any) {
   const api = getAPIClient(ctx);
-  await api.patch(`/plant`, plant)
+  await api.patch(`/plant`, data)
 }
 
 //REQUISIÇÃO DE DELETE DA PLANTA
