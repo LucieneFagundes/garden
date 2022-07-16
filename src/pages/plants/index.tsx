@@ -44,10 +44,9 @@ const ConfirmDialogDemo = () => {
 }
 
 const columns = [
-  { field: 'photo', header: 'Foto' },
   { field: 'name', header: 'Nome' },
   { field: 'species', header: 'Espécies' },
-  { field: 'notes', header: 'Notas' },
+  { field: 'notes', header: 'Anotações' },
 ]
 
 export default function Plants(data: any) {
@@ -57,6 +56,10 @@ export default function Plants(data: any) {
 
   function handleCreate() {
     Router.push('/plants/cadastro')
+  }
+
+  function handleDetail(data: any){
+    Router.push(`/activities/${data.id}`)
   }
 
   function handleEdit(data: any) {
@@ -76,11 +79,14 @@ export default function Plants(data: any) {
         try {
           await setDeletePlant(data.id);
           toast.current.show({ severity: 'success', summary: 'Confimado', detail: 'Excluido com sucesso', life: 3000 });
+          Router.reload();
+          //TODO: acionar o Reload no componente, e não na página inteira
         } catch (error) {
           toast.current.show({ severity: 'danger', summary: 'Error', detail: 'Erro ao excluir', life: 3000 });
         }
       }
     });
+
   }
 
 
@@ -90,7 +96,7 @@ export default function Plants(data: any) {
         <div className="flex flex-row-reverse px-1 pb-3">
           <Button icon="pi pi-plus" className="p-button-outlined p-button-rounded p-button-primary" label="Adicionar planta" onClick={handleCreate}></Button>
         </div>
-        <Table data={myData} columns={columns} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <Table data={myData} columns={columns} handleDetail={handleDetail} handleEdit={handleEdit} handleDelete={handleDelete} />
         <Toast ref={toast} />
         <ConfirmDialog />
       </Layout>

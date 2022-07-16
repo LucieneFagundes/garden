@@ -1,9 +1,12 @@
 import { Formik, Form, Field, isEmptyArray } from "formik";
 import Router from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
 import { setNewPlant } from "../../services/plant-services";
+import noImage from "../../public/noImage.png";
+import Image from "next/image";
+import { getBase64Image } from "../../utils/utils";
 
 interface IPlant {
   name: string
@@ -16,9 +19,21 @@ interface IPlant {
 export default function Cadastro() {
   //TODO : Melhorar a estrutura de upload, e tornar um componente
   const { user } = useContext(AuthContext);
-  const [photo, setPhoto] = useState<string | ArrayBuffer>()
+  const [image, setImage] = useState(undefined);
+  const [photo, setPhoto] = useState(undefined);
+  const [preview, setPreview] = useState(undefined);
 
-    const initialValues: IPlant = {
+  useEffect(() => {
+    if (!image) {
+      setPreview(noImage)
+      return
+    }
+    const objectUrl = URL.createObjectURL(image)
+    setPreview(objectUrl)
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [image])
+
+  const initialValues: IPlant = {
     name: '',
     species: '',
     notes: '',
@@ -27,31 +42,26 @@ export default function Cadastro() {
   }
 
   async function handleChange(event: any) {
-
     event.preventDefault();
-    const file = event.target.files[0];
-    // console.log(file);
-    const reader = new FileReader();
-    let blob = await fetch(file.objectURI).then(r => r.blob()); //blob:url
-    reader.readAsDataURL(blob);
 
-    reader.onloadend = function () {
-      const base64data = reader.result;
-      setPhoto(base64data.toString());
-      console.log(base64data);
+    if (!event.target.files || event.target.files.length === 0) {
+      setImage(noImage)
+      return
     }
+    setImage(event.target.files[0])
 
+    const file = event.target.files[0];
+    const fileBase64 = await getBase64Image(file);
+    setPhoto(fileBase64);
   }
 
-
-
+  //FUNCIONANDO
   async function handleCreate(plant: IPlant) {
+    //TODO: Fazer tratativa de campos vazios para null no backend.
     try {
-
       plant.photo = photo.toString();
     } catch (error) {
       console.log(error);
-
     }
     plant.userId = user.id;
     console.log(plant);
@@ -64,12 +74,24 @@ export default function Cadastro() {
       <Layout title="Cadastrar nova planta">
         <Formik initialValues={initialValues} onSubmit={handleCreate}>
           <Form action="#" method="POST">
+
             <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
-              <div className="">
-                <img id="previewImage" width={300} height={300} src="#" alt="previewImage" />
-                <input id="photo" name="photo" type="file" accept="image/*" onChange={(e) => handleChange(e)} required={false} />
-                {/* <input id="userId" name="userId" type="hidden" value={user.id} /> */}
+              {/* PARTE DA FOTO E PREVIEW */}
+              {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
+              <div className="flex flex-col w-auto items-center">
+                <Image src={preview != undefined ? preview : noImage}
+                  width={300} height={300} alt="previewImage"
+                />
+                <input id="photo"
+                  name="photo"
+                  type="file"
+                  accept="image/jpg, image/png, image/jpeg"
+                  onChange={(e) => handleChange(e)}
+                  size={1000000}
+                />
               </div>
+
+              {/* PARTE DO RESTANTE DO FORMULÁRIO */}
               <div className="rounded-md space-y-2 w-full max-w-lg">
                 <div>
                   <label htmlFor="name" className="">Nome <span>*</span></label>

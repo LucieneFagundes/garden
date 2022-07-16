@@ -1,10 +1,16 @@
+import Image from 'next/image';
 import { FileUpload } from 'primereact/fileupload';
 import { useEffect, useState } from 'react';
 import noImage from '../public/noImage.png';
 
+type UploadProps = {
+  // handleUploadImage?: () => string | ArrayBuffer;
+  photo?: any;
+}
 
-export default function Upload() {
+export default function Upload(data: UploadProps) {
   const [image, setImage] = useState(undefined);
+  const [photo, setPhoto] = useState(undefined);
   const [preview, setPreview] = useState(undefined);
 
   useEffect(() => {
@@ -12,47 +18,53 @@ export default function Upload() {
       setPreview(noImage)
       return
     }
-
     const objectUrl = URL.createObjectURL(image)
     setPreview(objectUrl)
-
     return () => URL.revokeObjectURL(objectUrl)
   }, [image])
 
-  const onSelectFile = e => {
-    if (!e.target.files || e.target.files.length === 0) {
+  const onSelectFile = async event => {
+    event.preventDefault();
+
+    if (!event.target.files || event.target.files.length === 0) {
       setImage(noImage)
       return
     }
-    setImage(e.target.files[0])
+    setImage(event.target.files[0])
+
+    const file = event.target.files[0];
+    // console.log(file);
+    const reader = new FileReader();
+    let blob = await fetch(file.objectURI).then(r => r.blob()); //blob:url
+    reader.readAsDataURL(blob);
+
+    reader.onloadend = function () {
+      const base64data = reader.result;
+      setPhoto(base64data.toString());
+      // console.log(photo);
+    }
   }
 
-  function UploadImage() {
-
+  function handleUploadImage() {
+    if(!photo){
+      return undefined
+    }
+    return photo;
   }
 
   return (
-    <div className="w-6/12 ">
-      {/* <form onSubmit={UploadImage}> */}
-      <div className="flex flex-col w-auto">
-        <div className="max-w-md my-5 mx-auto border-spacing-3 border-black">
-          <img src={preview == undefined ? preview : noImage} alt="preview"
-            width="auto" height="auto"
-            className=""
-          />
-        </div>
-
-        <input
-          type="file"
-          name="image"
-          id="image"
-          accept='image/*'
-          size={1000000}
-          onChange={onSelectFile}
-        />
+    <div className="flex flex-col w-auto items-center">
+      <div className="max-w-md my-5 mx-auto block">
+        <Image src={preview != undefined ? preview : noImage} alt="preview" width={300} height={300} />
       </div>
-      <button type="submit">Enviar</button>
-      {/* </form> */}
+      <input
+        type="file"
+        name="image"
+        id="image"
+        accept='image/*'
+        size={1000000}
+        onChange={onSelectFile}
+      />
     </div>
   )
 }
