@@ -78,16 +78,23 @@ export default function Cadastro() {
             <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
               {/* PARTE DA FOTO E PREVIEW */}
               {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
+              {/* TODO: Botão de remoção de imagem do input */}
               <div className="flex flex-col w-auto items-center">
-                <Image src={preview != undefined ? preview : noImage}
-                  width={300} height={300} alt="previewImage"
-                />
+                <div className="border-solid  border-indigo-600">
+                  <Image src={preview != undefined ? preview : noImage}
+                    width={300} height={300} alt="previewImage"
+                    objectFit="cover"
+                    className="rounded-xl"
+                  />
+                </div>
                 <input id="photo"
                   name="photo"
                   type="file"
                   accept="image/jpg, image/png, image/jpeg"
                   onChange={(e) => handleChange(e)}
                   size={1000000}
+                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-indigo-600
+                  hover:file:bg-violet-10"
                 />
               </div>
 
