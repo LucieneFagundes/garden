@@ -49,16 +49,17 @@ const columns = [
   { field: 'notes', header: 'Anotações' },
 ]
 
-export default function Plants(data: any) {
-  let myData = Array.from(data.data);
+export default function Plants({ data }: any) {
 
+  let dataPlants = data.map((d: any) => { return d })
+  
   const toast = useRef(null);
 
   function handleCreate() {
     Router.push('/plants/cadastro')
   }
 
-  function handleDetail(data: any){
+  function handleDetail(data: any) {
     Router.push(`/activities/${data.id}`)
   }
 
@@ -96,7 +97,7 @@ export default function Plants(data: any) {
         <div className="flex flex-row-reverse px-1 pb-3">
           <Button icon="pi pi-plus" className="p-button-outlined p-button-rounded p-button-primary" label="Adicionar planta" onClick={handleCreate}></Button>
         </div>
-        <Table data={myData} columns={columns} handleDetail={handleDetail} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <Table data={dataPlants} photo={true} columns={columns} handleDetail={handleDetail} handleEdit={handleEdit} handleDelete={handleDelete} />
         <Toast ref={toast} />
         <ConfirmDialog />
       </Layout>

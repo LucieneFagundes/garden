@@ -9,23 +9,30 @@ interface Props {
   data: any;
   columns: any;
   header?: string;
-  handleDetail: (data:any) => void;
-  handleEdit: (data: any) => void;
-  handleDelete: (data: any) => void;
+  photo?: boolean;
+  handleDetail?: (data: any) => void;
+  handleEdit?: (data: any) => void;
+  handleDelete?: (data: any) => void;
 }
 
-export default function Table({ data, columns, header, handleDetail, handleEdit, handleDelete }: Props) {
+export default function Table({ data, columns, header, handleDetail, handleEdit, handleDelete, photo }: Props) {
   const imageBodyTemplate = (rowData) => {
-    return <Image src={rowData.photo ? rowData.photo : noImage}  className="product-image" 
+    return <Image src={rowData.photo ? rowData.photo : noImage} className="product-image"
       height={100} width={100}
     />
   }
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button icon="pi pi-eye" className="p-button-text  p-button-rounded p-button-primary" label='Detalhes' onClick={() => handleDetail(rowData)} />
-        <Button icon="pi pi-pencil" className="p-button-text p-button-rounded p-button-secondary mr-2" onClick={() => handleEdit(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-text  p-button-rounded p-button-danger" onClick={() => handleDelete(rowData)} />
+        {handleDetail &&
+          <Button icon="pi pi-eye" className="p-button-text  p-button-rounded p-button-primary" label='Detalhes' onClick={() => handleDetail(rowData)} />
+        }
+        {handleEdit &&
+          <Button icon="pi pi-pencil" className="p-button-text p-button-rounded p-button-secondary mr-2" onClick={() => handleEdit(rowData)} />
+        }
+        {handleDelete &&
+          <Button icon="pi pi-trash" className="p-button-text  p-button-rounded p-button-danger" onClick={() => handleDelete(rowData)} />
+        }
       </React.Fragment>
     );
   }
@@ -36,10 +43,12 @@ export default function Table({ data, columns, header, handleDetail, handleEdit,
   return (
     <div>
       <div className="card">
-        <DataTable value={data} responsiveLayout="scroll">
-          <Column field="photo" header="Foto" body={imageBodyTemplate}></Column>
+        <DataTable value={data} responsiveLayout="scroll" >
+          {photo &&
+            <Column field="photo" header="Foto" body={imageBodyTemplate}></Column>
+          }
           {dynamicColumns}
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
+          <Column body={actionBodyTemplate} style={{ minWidth: '8rem' }}></Column>
         </DataTable>
       </div>
     </div>

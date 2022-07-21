@@ -79,6 +79,7 @@ export default function Cadastro() {
               {/* PARTE DA FOTO E PREVIEW */}
               {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
               {/* TODO: Botão de remoção de imagem do input */}
+              {/* TODO: Redimencionar imagem antes de salvar */}
               <div className="flex flex-col w-auto items-center">
                 <div className="border-solid  border-indigo-600">
                   <Image src={preview != undefined ? preview : noImage}
@@ -92,7 +93,7 @@ export default function Cadastro() {
                   type="file"
                   accept="image/jpg, image/png, image/jpeg"
                   onChange={(e) => handleChange(e)}
-                  size={1000000}
+                  // size={5000000}
                   className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-indigo-600
                   hover:file:bg-violet-10"
                 />
