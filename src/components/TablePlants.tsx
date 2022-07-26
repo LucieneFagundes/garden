@@ -16,23 +16,19 @@ interface Props {
 }
 
 export default function Table({ data, columns, header, handleDetail, handleEdit, handleDelete, photo }: Props) {
+
   const imageBodyTemplate = (rowData) => {
-    return <Image src={rowData.photo ? rowData.photo : noImage} className="product-image"
-      height={100} width={100}
+    return <Image src={rowData.photo ? rowData.photo : noImage} className="rounded-xl"
+      height={100} width={100} objectFit="cover"
     />
   }
+
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        {handleDetail &&
           <Button icon="pi pi-eye" className="p-button-text  p-button-rounded p-button-primary" label='Detalhes' onClick={() => handleDetail(rowData)} />
-        }
-        {handleEdit &&
           <Button icon="pi pi-pencil" className="p-button-text p-button-rounded p-button-secondary mr-2" onClick={() => handleEdit(rowData)} />
-        }
-        {handleDelete &&
           <Button icon="pi pi-trash" className="p-button-text  p-button-rounded p-button-danger" onClick={() => handleDelete(rowData)} />
-        }
       </React.Fragment>
     );
   }

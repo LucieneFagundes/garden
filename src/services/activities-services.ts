@@ -10,3 +10,14 @@ export async function getActivities(id: any, ctx?: any){
   const {data} = await api.get(`/activities/${id}`);
   return data
 }
+
+export async function deleteActivity(id: string, ctx?: any){
+  const api = getAPIClient(ctx);
+  await api.delete(`/activity/${id}`);
+}
+
+export async function getActivity(id: string, ctx?: any){
+  const api = getAPIClient(ctx);
+  const {data} = await api.get(`/activity/${id}`);
+  return data;
+}

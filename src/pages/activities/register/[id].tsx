@@ -88,7 +88,7 @@ export default function RegisterActivity({ id }: Props) {
       console.log(err);
     }
   }
-
+ 
   return (
     <Layout title="New Activity">
       <Formik initialValues={initialValues} onSubmit={handleCreateActivity}>
@@ -112,7 +112,7 @@ export default function RegisterActivity({ id }: Props) {
             </div>
             <div>
               <label htmlFor="date">Data e hora de início</label>
-              <Calendar className="w-full" id="date" value={selectedDate} onChange={(e) => setSelectedDate(e.value)} showTime minDate={today} showIcon={true} />
+              <Calendar className="w-full" id="date" value={selectedDate} onChange={(e) => setSelectedDate(e.value)} showTime minDate={today} showIcon={true} dateFormat="dd/mm/yy" />
             </div>
             <div>
               <label htmlFor="notes">Anotações</label>
@@ -127,9 +127,6 @@ export default function RegisterActivity({ id }: Props) {
               />
             </div>
           </div>
-
-
-
           <div>
             <button
               type="submit"

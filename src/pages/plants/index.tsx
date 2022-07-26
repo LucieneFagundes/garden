@@ -1,6 +1,6 @@
 import { parseCookies } from 'nookies';
 import { getPlantsRequest, setDeletePlant } from '../../services/plant-services';
-import Table from '../../components/Table';
+import Table from '../../components/TablePlants';
 import Layout from '../../components/Layout';
 import Router from 'next/router';
 
