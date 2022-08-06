@@ -16,7 +16,7 @@ interface IPlant {
   userId: string;
 }
 
-export default function Cadastro() {
+export default function CreatePlant() {
   //TODO : Melhorar a estrutura de upload, e tornar um componente
   const { user } = useContext(AuthContext);
   const [image, setImage] = useState(undefined);

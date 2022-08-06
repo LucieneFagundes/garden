@@ -75,7 +75,7 @@ const Login: NextPage = () => {
 
               <div className="flex items-center justify-between">
                 <div className="text-sm">
-                  <Link href="/cadastro">
+                  <Link href="/singup">
                     <a className="font-medium text-indigo-600 hover:text-indigo-500">
                       Cadastre-se
                     </a>

@@ -1,16 +1,15 @@
 import Image from "next/image";
-import { parseCookies } from "nookies";
-import Layout from "../../components/Layout";
-import { getPlantByIdRequest } from "../../services/plant-services";
-import Table from "../../components/TableActivities";
-
-import noImage from "../../public/noImage.png";
 import Router from "next/router";
+import { parseCookies } from "nookies";
+import { PencilIcon, PlusIcon } from "@heroicons/react/outline";
+import { getPlantByIdRequest } from "../../../services/plant-services";
 import {
   deleteActivity,
   getActivities,
-} from "../../services/activities-services";
-import { useEffect, useState } from "react";
+} from "../../../services/activities-services";
+import Layout from "../../../components/Layout";
+import Table from "../../../components/TableActivities";
+import noImage from "../../../public/noImage.png";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -33,8 +32,11 @@ export async function getServerSideProps(ctx: any) {
 }
 
 export default function Activities({ data, activities }: any) {
+  function updatePlant() {
+    Router.replace(`/plants/update/${data.id}`)
+  }
   function createActivity() {
-    Router.push(`/activities/register/${data.id}`);
+    Router.push(`/plants/activities/register/${data.id}`);
   }
 
   function handleEdit(e) {
@@ -51,7 +53,7 @@ export default function Activities({ data, activities }: any) {
   }
 
   return (
-    <Layout title={`Resumo: ${data.name}`}>
+    <Layout title={`${data.name}`}>
       <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
         <div className="flex flex-col w-auto">
           <div className="items-center">
@@ -88,12 +90,33 @@ export default function Activities({ data, activities }: any) {
         </div>
 
         <div className="rounded-md space-y-2 w-4/5 ">
-          <div>
+          <div className="flex">
+            <button
+              type="button"
+              onClick={updatePlant}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md mr-1
+              text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
+            >
+              <span>
+                <PencilIcon
+                  className="h-5 w-5 pr-1 text-white group-hover:text-white"
+                  aria-hidden="true"
+                />
+              </span>
+              Editar planta
+            </button>
             <button
               type="button"
               onClick={createActivity}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md ml-1
+              text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
             >
+              <span>
+                <PlusIcon
+                  className="h-5 w-5 pr-1 text-white group-hover:text-white"
+                  aria-hidden="true"
+                />
+              </span>
               Adicionar tarefa
             </button>
           </div>

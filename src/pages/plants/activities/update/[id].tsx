@@ -6,11 +6,11 @@ import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { useEffect, useState } from "react";
-import Layout from "../../../components/Layout";
+import Layout from "../../../../components/Layout";
 import {
   getActivity,
-  setActivity,
-} from "../../../services/activities-services";
+  setUpdateActivity,
+} from "../../../../services/activities-services";
 
 interface Activity {
   id: string;
@@ -41,13 +41,13 @@ export async function getServerSideProps(ctx?: any) {
 }
 
 export default function UpdateActivity({ data }) {
-  //TODO: Finalizar update activity
-
+  /*
+    TODO: DATA E HORA: Tornar mais dinâmico a seleção de data e hora. É possível setar data e hora separado e juntar no envio para o back? 
+   */
   const activity: Activity = data;
-  
-  console.log(activity)
+
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const [selectedPeriodQt, setSelectedPeriodQt] = useState(1);
+  const [selectedPeriodQt, setSelectedPeriodQt] = useState(data.period_qd);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [selectedDate, setSelectedDate] = useState<Date | Date[] | undefined>(
     undefined
@@ -79,21 +79,43 @@ export default function UpdateActivity({ data }) {
 
   //Formik
   const initialValues = {
-    // plantId: id,
+    id: data.id,
     activity: "",
     period: "",
     period_qd: "",
     initial_event: "",
-    notes: "",
+    notes: data.notes,
   };
-  async function handleCreateActivity(data: any) {
+
+  useEffect(() => {
+    if (data.activity === "regar")
+      setSelectedActivity({ name: "Regar", key: "regar" });
+    if (data.activity === "fertilizar")
+      setSelectedActivity({ name: "Fertilizar", key: "fertilizar" });
+    if (data.activity === "imersao")
+      setSelectedActivity({ name: "Imersao", key: "imersao" });
+    if (data.activity === "umidificacao")
+      setSelectedActivity({ name: "Umidificacao", key: "umidificacao" });
+    if (data.activity === "transplante")
+      setSelectedActivity({ name: "Transplante", key: "transplante" });
+
+    if (data.period === "dia") setSelectedPeriod({ name: "Dia", key: "dia" });
+    if (data.period === "semana")
+      setSelectedPeriod({ name: "Semana", key: "semana" });
+    if (data.period === "mes") setSelectedPeriod({ name: "Mês", key: "mes" });
+
+    const convertDate = new Date(data.initial_event);
+    setSelectedDate(convertDate);
+  }, [data]);
+
+  async function handleUpdateActivity(data: any) {
     try {
       data.activity = selectedActivity.key;
       data.period = selectedPeriod.key;
       data.initial_event = selectedDate;
       data.period_qd = selectedPeriodQt;
 
-      await setActivity(data);
+      await setUpdateActivity(data);
       Router.back();
     } catch (err) {
       console.log(err);
@@ -102,7 +124,7 @@ export default function UpdateActivity({ data }) {
 
   return (
     <Layout title="Edit Activity">
-      <Formik initialValues={initialValues} onSubmit={handleCreateActivity}>
+      <Formik initialValues={initialValues} onSubmit={handleUpdateActivity}>
         <Form>
           <div>
             <div>

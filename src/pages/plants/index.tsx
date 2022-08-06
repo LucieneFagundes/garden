@@ -56,11 +56,11 @@ export default function Plants({ data }: any) {
   const toast = useRef(null);
 
   function handleCreate() {
-    Router.push('/plants/cadastro')
+    Router.push('/plants/create')
   }
 
   function handleDetail(data: any) {
-    Router.push(`/activities/${data.id}`)
+    Router.push(`/plants/activities/${data.id}`)
   }
 
   function handleEdit(data: any) {
@@ -97,7 +97,7 @@ export default function Plants({ data }: any) {
         <div className="flex flex-row-reverse px-1 pb-3">
           <Button icon="pi pi-plus" className="p-button-outlined p-button-rounded p-button-primary" label="Adicionar planta" onClick={handleCreate}></Button>
         </div>
-        <Table data={dataPlants} photo={true} columns={columns} handleDetail={handleDetail} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <Table data={dataPlants} photo={true} columns={columns} handleDetail={handleDetail} handleDelete={handleDelete} />
         <Toast ref={toast} />
         <ConfirmDialog />
       </Layout>

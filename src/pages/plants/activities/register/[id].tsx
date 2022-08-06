@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Layout from "../../../components/Layout";
+import Layout from "../../../../components/Layout";
 import { Field, Form, Formik } from "formik";
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
-import { setActivity } from "../../../services/activities-services";
+import { setActivity } from "../../../../services/activities-services";
 import { parseCookies } from "nookies";
-import { getPlantByIdRequest } from "../../../services/plant-services";
+import { getPlantByIdRequest } from "../../../../services/plant-services";
 import Router from "next/router";
 
 export async function getServerSideProps(ctx: any) {

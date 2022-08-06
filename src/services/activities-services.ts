@@ -5,6 +5,12 @@ export async function setActivity(data: any, ctx?: any) {
   await api.post(`/activities`, data);
 }
 
+
+export async function setUpdateActivity(data: any, ctx?: any) {
+  const api = getAPIClient(ctx)
+  await api.put(`/activity/${data.id}`, data);
+}
+
 export async function getActivities(id: any, ctx?: any){
   const api = getAPIClient(ctx);
   const {data} = await api.get(`/activities/${id}`);

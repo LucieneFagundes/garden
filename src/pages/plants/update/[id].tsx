@@ -1,10 +1,10 @@
+import { getPlantByIdRequest, setPlantUpdate } from "../../../services/plant-services";
+import Router from "next/router";
 import { Field, Form, Formik } from "formik";
 import Image from "next/image";
-import Router from "next/router";
 import { parseCookies } from "nookies";
-import Layout from "../../components/Layout";
-import { getPlantByIdRequest, setPlantUpdate } from "../../services/plant-services";
-import noImage from "../../public/noImage.png";
+import Layout from "../../../components/Layout";
+import noImage from "../../../public/noImage.png";
 
 interface IPlant {
   data: {

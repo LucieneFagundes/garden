@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-export default function Cadastro() {
+export default function SingUp() {
 
   interface ISingUp {
     name: string;
