@@ -64,7 +64,6 @@ export default function CreatePlant() {
       console.log(error);
     }
     plant.userId = user.id;
-    console.log(plant);
     await setNewPlant(plant);
     Router.push("/plants")
   }

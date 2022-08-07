@@ -6,10 +6,12 @@ import { getPlantByIdRequest } from "../../../services/plant-services";
 import {
   deleteActivity,
   getActivities,
+  getActivity,
 } from "../../../services/activities-services";
 import Layout from "../../../components/Layout";
 import Table from "../../../components/TableActivities";
 import noImage from "../../../public/noImage.png";
+import { useEffect, useState } from "react";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -32,8 +34,13 @@ export async function getServerSideProps(ctx: any) {
 }
 
 export default function Activities({ data, activities }: any) {
+  const [tasks, setTasks] = useState<any>();
+  useEffect(() => {
+    setTasks(activities);
+  }, []);
+
   function updatePlant() {
-    Router.replace(`/plants/update/${data.id}`)
+    Router.replace(`/plants/update/${data.id}`);
   }
   function createActivity() {
     Router.push(`/plants/activities/register/${data.id}`);
@@ -42,11 +49,14 @@ export default function Activities({ data, activities }: any) {
   function handleEdit(e) {
     Router.push(`update/${e.id}`);
   }
-  function handleDelete(e) {
+  async function handleDelete(e) {
     try {
-      deleteActivity(e.id);
-      //TODO: Atualizar o componente e não a página.
-      Router.reload();
+      await deleteActivity(e.id);
+
+      const activity = await getActivities(data.id);
+      console.log(activity);
+
+      setTasks(activity);
     } catch (err) {
       alert("Algo deu errado: " + err.message);
     }
@@ -122,7 +132,7 @@ export default function Activities({ data, activities }: any) {
           </div>
           <div>
             <Table
-              data={activities}
+              data={tasks}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
             />

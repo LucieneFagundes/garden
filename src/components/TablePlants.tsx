@@ -43,7 +43,7 @@ export default function Table({
           <Button
             icon="pi pi-eye"
             className="p-button-text  p-button-rounded p-button-primary"
-            label="Detalhes"
+            label="Ver mais"
             onClick={() => handleDetail(rowData)}
           />
         )}
