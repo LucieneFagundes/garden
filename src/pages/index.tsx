@@ -1,6 +1,6 @@
 import { parseCookies } from "nookies";
+import CalendarTeste from "../components/calendarTeste";
 import Layout from "../components/Layout";
-import Upload from "../components/Upload";
 
 export async function getServerSideProps(ctx: any) {
   const { ['auth.token']: token } = parseCookies(ctx);
@@ -22,7 +22,7 @@ export default function Home () {
 
   return(
   <Layout title="Dashboard">
-    <Upload />
+    
   </Layout>
   )
 }

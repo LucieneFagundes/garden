@@ -18,7 +18,7 @@ import { AuthContext } from '../contexts/AuthContext'
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Plantas', href: '/plants', current: false },
-  // { name: 'Projects', href: '#', current: false },
+  { name: 'Calendário', href: '/calendar', current: false },
   // { name: 'Calendar', href: '#', current: false },
   // { name: 'Reports', href: '#', current: false },
 ]
