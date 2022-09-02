@@ -18,7 +18,7 @@ interface IUpdatePlant {
 //REQUISIÇÃO DE TODAS AS PLANTAS DO USUÁRIO
 export async function getPlantsRequest(id: string, ctx?: any) {
   const api = getAPIClient(ctx);
-  const {data} = await api.get(`/plants/${id}`);
+  const { data } = await api.get(`/plants/${id}`);
   return data;
 }
 //REQUISIÇÃO DE CRIAÇÃO DE PLANTA
@@ -49,7 +49,6 @@ export async function setDeletePlant(id: string, ctx?: any) {
 //REQUISIÇÃO DE PLANTAS COM ATIVIDADES PELO USUÁRIO LOGADO
 export async function getPlantsWithActivities(id: string, ctx?: any) {
   const api = getAPIClient(ctx);
-  const {data}  = await api.get(`/plant-with-activity/${id}`);
- console.log(data, 33333);
+  const { data } = await api.get(`/plant-with-activity/${id}`);
   return data;
 }

@@ -15,6 +15,8 @@ import {
   parseISO,
   startOfToday,
 } from "date-fns";
+import isAfter from "date-fns/isAfter";
+import ptBR from "date-fns/locale/pt-BR";
 import { parseCookies } from "nookies";
 import { Fragment, useState } from "react";
 import Layout from "../components/Layout";
@@ -34,7 +36,6 @@ export async function getServerSideProps(ctx: any) {
   const { id } = JSON.parse(token);
   const data = await getPlantsWithActivities(id, ctx);
 
-  console.log(data);
   return {
     props: { data },
   };
@@ -67,8 +68,6 @@ function classNames(...classes) {
 }
 
 export default function Calendar({ data }: any) {
-  console.log(data.id);
-
   let today = startOfToday();
   let [selectedDay, setSelectedDay] = useState(today);
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -94,14 +93,14 @@ export default function Calendar({ data }: any) {
   );
 
   return (
-    <Layout title="Calendário">
+    <Layout title="Agenda">
       <div className="pt-16">
         <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6">
           <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
             <div className="md:pr-14">
               <div className="flex items-center">
-                <h2 className="flex-auto font-semibold text-gray-900">
-                  {format(firstDayCurrentMonth, "MMMM yyyy")}
+                <h2 className="flex-auto font-semibold text-gray-900 capitalize">
+                  {format(firstDayCurrentMonth, "MMMM yyyy", { locale: ptBR })}
                 </h2>
                 <button
                   type="button"
@@ -121,12 +120,12 @@ export default function Calendar({ data }: any) {
                 </button>
               </div>
               <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-gray-500">
+                <div>D</div>
                 <div>S</div>
-                <div>M</div>
                 <div>T</div>
-                <div>W</div>
-                <div>T</div>
-                <div>F</div>
+                <div>Q</div>
+                <div>Q</div>
+                <div>S</div>
                 <div>S</div>
               </div>
               <div className="grid grid-cols-7 mt-2 text-sm">
@@ -171,12 +170,17 @@ export default function Calendar({ data }: any) {
                       </time>
                     </button>
 
-                    <div className="w-1 h-1 mx-auto mt-1">
-                      {data.some((meeting) =>
-                        isSameDay(parseISO(meeting.initial_event), day)
-                      ) && (
-                        <div className="w-1 h-1 rounded-full bg-sky-500"></div>
-                      )}
+                    <div className="w-4 h-1 mx-auto mt-1">
+                      {data.some(
+                        (meeting) =>
+                          isSameDay(parseISO(meeting.initial_event), day) &&
+                          isAfter(parseISO(meeting.initial_event), today)
+                      ) && <div className="w-4 h-1 bg-sky-500"></div>}
+                      {data.some(
+                        (meeting) =>
+                          isSameDay(parseISO(meeting.initial_event), day) &&
+                          !isAfter(parseISO(meeting.initial_event), today)
+                      ) && <div className="w-4 h-1 bg-red-500"></div>}
                     </div>
                   </div>
                 ))}
@@ -184,9 +188,11 @@ export default function Calendar({ data }: any) {
             </div>
             <section className="mt-12 md:mt-0 md:pl-14">
               <h2 className="font-semibold text-gray-900">
-                Schedule for{" "}
-                <time dateTime={format(selectedDay, "yyyy-MM-dd")}>
-                  {format(selectedDay, "MMM dd, yyy")}
+                Agenda para{" "}
+                <time
+                  dateTime={format(selectedDay, "yyyy-MM-dd", { locale: ptBR })}
+                >
+                  {format(selectedDay, "dd MMM, yyyy", { locale: ptBR })}
                 </time>
               </h2>
               <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
@@ -195,7 +201,7 @@ export default function Calendar({ data }: any) {
                     <Meeting meeting={data} key={data.id} />
                   ))
                 ) : (
-                  <p>No meetings for today.</p>
+                  <p>Sem tarefas hoje.</p>
                 )}
               </ol>
             </section>
@@ -211,14 +217,21 @@ function Meeting({ meeting }) {
   let endDateTime = parseISO(meeting.next_event);
 
   return (
-    <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
+    <li
+      className={
+        (classNames(isAfter(parseISO(meeting.initial_event), startOfToday())) &&
+          "flex items-center bg-green-100 px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-green-200") ||
+        (!isAfter(parseISO(meeting.initial_event), startOfToday()) &&
+          "flex items-center px-4 py-2 space-x-4 bg-red-100 group rounded-xl focus-within:bg-gray-100 hover:bg-red-200")
+      }
+    >
       <img
         src={meeting.photo}
         alt=""
         className="flex-none w-10 h-10 rounded-full"
       />
       <div className="flex-auto">
-        <p className="text-gray-900">{meeting.activity}</p>
+        <p className="text-gray-900 capitalize">{meeting.activity}</p>
         <p className="mt-0.5">
           <time dateTime={meeting.startDatetime}>
             {format(startDateTime, "h:mm a")}
