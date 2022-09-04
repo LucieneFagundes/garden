@@ -27,3 +27,9 @@ export async function getActivity(id: string, ctx?: any){
   const {data} = await api.get(`/activity/${id}`);
   return data;
 }
+
+export async function setNextEvent(id: string, ctx?: any){
+  const api = getAPIClient(ctx);
+  const response = await api.put(`/activities-update-event/${id}`);
+  return response;
+}

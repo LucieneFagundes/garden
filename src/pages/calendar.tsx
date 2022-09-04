@@ -18,9 +18,25 @@ import {
 import isAfter from "date-fns/isAfter";
 import ptBR from "date-fns/locale/pt-BR";
 import { parseCookies } from "nookies";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import { setNextEvent } from "../services/activities-services";
 import { getPlantsWithActivities } from "../services/plant-services";
+import noImage from "../public/noImage.png";
+import Image from "next/image";
+
+interface IActivity {
+  id: string;
+  activity: string;
+  notes: string;
+  initial_event: string;
+  next_event: string;
+  plantId: string;
+  plant: {
+    name: string;
+    photo?: any;
+  };
+}
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -37,37 +53,18 @@ export async function getServerSideProps(ctx: any) {
   const data = await getPlantsWithActivities(id, ctx);
 
   return {
-    props: { data },
+    props: { data, userId: id },
   };
 }
 
-// const meetings = [
-//   {
-//     id: 1,
-//     name: "Leslie Alexander",
-//     imageUrl:
-//       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-//     startDatetime: "2022-08-25T13:00",
-//     endDatetime: "2022-08-26T14:30",
-//   },
-// ];
-
-// const meetings = [
-//   {
-//     id: '9cf3345e-5a15-41bd-9b11-eed52f651a6f',
-//     activity: 'regar',
-//     initial_event: '2022-08-20T23:03:22.828Z',
-//     next_event: '2022-08-20T23:03:22.828Z',
-//     plantId: '01af981f-ab76-480f-a716-1ca6f8a94e07',
-//     name: 'Hera',
-//     photo: null
-//   }
-// ]
-function classNames(...classes) {
+function classNames(...classes: (string | boolean)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Calendar({ data }: any) {
+export default function Calendar({ data, userId }: any) { 
+  const dataTasks: IActivity[] = Array.from(data);
+  const [tasks, setTasks] = useState<IActivity[]>(dataTasks);
+
   let today = startOfToday();
   let [selectedDay, setSelectedDay] = useState(today);
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -88,9 +85,19 @@ export default function Calendar({ data }: any) {
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
-  let selectedDayMeetings = data.filter((meeting) =>
-    isSameDay(parseISO(meeting.initial_event), selectedDay)
+  let selectedDayMeetings = tasks?.filter((meeting) =>
+    isSameDay(parseISO(meeting.next_event), selectedDay)
   );
+
+  async function upEvent(data) {
+    try {
+      await setNextEvent(data.id);
+      const res = await getPlantsWithActivities(userId);
+      setTasks(res);
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   return (
     <Layout title="Agenda">
@@ -171,15 +178,15 @@ export default function Calendar({ data }: any) {
                     </button>
 
                     <div className="w-4 h-1 mx-auto mt-1">
-                      {data.some(
+                      {tasks?.some(
                         (meeting) =>
-                          isSameDay(parseISO(meeting.initial_event), day) &&
-                          isAfter(parseISO(meeting.initial_event), today)
+                          isSameDay(parseISO(meeting.next_event), day) &&
+                          isAfter(parseISO(meeting.next_event), today)
                       ) && <div className="w-4 h-1 bg-sky-500"></div>}
-                      {data.some(
+                      {tasks?.some(
                         (meeting) =>
-                          isSameDay(parseISO(meeting.initial_event), day) &&
-                          !isAfter(parseISO(meeting.initial_event), today)
+                          isSameDay(parseISO(meeting.next_event), day) &&
+                          !isAfter(parseISO(meeting.next_event), today)
                       ) && <div className="w-4 h-1 bg-red-500"></div>}
                     </div>
                   </div>
@@ -197,8 +204,12 @@ export default function Calendar({ data }: any) {
               </h2>
               <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
                 {selectedDayMeetings.length > 0 ? (
-                  selectedDayMeetings.map((data) => (
-                    <Meeting meeting={data} key={data.id} />
+                  selectedDayMeetings.map((tasks) => (
+                    <Meeting
+                      meeting={tasks}
+                      key={tasks.id}
+                      handleEvent={upEvent}
+                    />
                   ))
                 ) : (
                   <p>Sem tarefas hoje.</p>
@@ -212,34 +223,35 @@ export default function Calendar({ data }: any) {
   );
 }
 
-function Meeting({ meeting }) {
-  let startDateTime = parseISO(meeting.initial_event);
+function Meeting({ meeting, handleEvent }) {
+  let startDateTime = parseISO(meeting.next_event);
   let endDateTime = parseISO(meeting.next_event);
 
   return (
     <li
       className={
-        (classNames(isAfter(parseISO(meeting.initial_event), startOfToday())) &&
+        (classNames(isAfter(parseISO(meeting.next_event), startOfToday())) &&
           "flex items-center bg-green-100 px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-green-200") ||
-        (!isAfter(parseISO(meeting.initial_event), startOfToday()) &&
+        (!isAfter(parseISO(meeting.next_event), startOfToday()) &&
           "flex items-center px-4 py-2 space-x-4 bg-red-100 group rounded-xl focus-within:bg-gray-100 hover:bg-red-200")
       }
     >
-      <img
-        src={meeting.photo}
+      <Image
+        src={meeting.plant.photo ? meeting.plant.photo : noImage}
+        width="70" height="70"
         alt=""
-        className="flex-none w-10 h-10 rounded-full"
+        className="flex-none w-3 h-3 rounded-full"
       />
       <div className="flex-auto">
-        <p className="text-gray-900 capitalize">{meeting.activity}</p>
+        <p className="text-gray-900 capitalize">{meeting.activity} - {meeting.plant.name}</p>
         <p className="mt-0.5">
           <time dateTime={meeting.startDatetime}>
-            {format(startDateTime, "h:mm a")}
+            {format(startDateTime, "HH:mm ")}
           </time>{" "}
-          -{" "}
+          {/* -{" "}
           <time dateTime={meeting.endDatetime}>
             {format(endDateTime, "h:mm a")}
-          </time>
+          </time> */}
         </p>
       </div>
       <Menu
@@ -264,6 +276,19 @@ function Meeting({ meeting }) {
         >
           <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={() => handleEvent(meeting)}
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    Concluir
+                  </button>
+                )}
+              </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
                   <a
