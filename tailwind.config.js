@@ -7,9 +7,12 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          300: '#e1f9e8'
+          100: '#e1f9e8'
         },
       },
+      screens: {
+        'xs': {'max': '639px'}
+      }
     },
   },
   plugins: [],
