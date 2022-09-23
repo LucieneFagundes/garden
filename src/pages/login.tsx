@@ -37,7 +37,7 @@ const Login: NextPage = () => {
               src="https://i.pinimg.com/564x/84/eb/2b/84eb2b29ecae003e53d717946ff49dbd.jpg"
               alt="Workflow"
             />
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Entre com sua conta</h2>
+            <h2 className="mt-6 text-center text-3xl font-light text-gray-900">GARDENE</h2>
           </div>
           <Formik initialValues={initialValues} onSubmit={handleSignIn}>
             <Form className="mt-8 space-y-6" action="#" method="POST">
@@ -53,7 +53,7 @@ const Login: NextPage = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                     placeholder="E-mail"
                   />
                 </div>
@@ -67,7 +67,7 @@ const Login: NextPage = () => {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                     placeholder="Senha"
                   />
                 </div>
@@ -76,13 +76,13 @@ const Login: NextPage = () => {
               <div className="flex items-center justify-between">
                 <div className="text-sm">
                   <Link href="/singup">
-                    <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                    <a className="font-medium text-green-600 hover:text-green-500">
                       Cadastre-se
                     </a>
                   </Link>
                 </div>
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  <a href="#" className="font-medium text-green-600 hover:text-green-500">
                     Esqueceu a senha?
                   </a>
                 </div>
@@ -91,10 +91,10 @@ const Login: NextPage = () => {
               <div>
                 <button
                   type="submit"
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                    <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+                    <LockClosedIcon className="h-5 w-5 text-green-500 group-hover:text-green-400" aria-hidden="true" />
                   </span>
                   Entrar
                 </button>
