@@ -31,13 +31,12 @@ export default function Plants({ data, id }: any) {
   const dataPlants = Array.from(data);
 
   const [plants, setPlants] = useState<any>([]);
-  
-  useEffect(() => { 
-    setPlants(dataPlants)
-  }, [])
+
+  useEffect(() => {
+    setPlants(dataPlants);
+  }, []);
 
   const toast = useRef(null);
-
 
   function handleCreate() {
     Router.push("/plants/create");
@@ -65,7 +64,7 @@ export default function Plants({ data, id }: any) {
             detail: "Excluido com sucesso",
             life: 3000,
           });
-          const plants = await getPlantsRequest(id); 
+          const plants = await getPlantsRequest(id);
           setPlants(plants);
         } catch (error) {
           toast.current.show({
@@ -77,7 +76,7 @@ export default function Plants({ data, id }: any) {
         }
       },
     });
-  } 
+  }
   return (
     <>
       <Layout title="Plantas">
@@ -88,10 +87,12 @@ export default function Plants({ data, id }: any) {
             label="Adicionar planta"
             onClick={handleCreate}
           ></Button> */}
-          <button className="flex px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full" onClick={handleCreate}>
+          <button
+            className="flex px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full"
+            onClick={handleCreate}
+          >
             <span>
-
-            <PlusSmIcon className="w-5 h-5" />
+              <PlusSmIcon className="w-5 h-5" />
             </span>
             MyButton
           </button>
