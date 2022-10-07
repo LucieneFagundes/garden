@@ -11,6 +11,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
+import { PlusSmIcon } from "@heroicons/react/outline";
 
 interface IPlant {
   id: string;
@@ -19,40 +20,6 @@ interface IPlant {
   photo: string;
   notes: string;
 }
-
-const ConfirmDialogDemo = () => {
-  const [visible, setVisible] = useState<boolean>(false);
-  const toast = useRef(null);
-
-  const accept = () => {
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmed",
-      detail: "You have accepted",
-      life: 3000,
-    });
-  };
-
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
-
-  const confirm2 = () => {
-    confirmDialog({
-      message: "Do you want to delete this record?",
-      header: "Delete Confirmation",
-      icon: "pi pi-info-circle",
-      acceptClassName: "p-button-danger",
-      accept,
-      reject,
-    });
-  };
-};
 
 const columns = [
   { field: "name", header: "Nome" },
@@ -100,7 +67,6 @@ export default function Plants({ data, id }: any) {
           });
           const plants = await getPlantsRequest(id); 
           setPlants(plants);
-          //TODO: acionar o Reload no componente, e não na página inteira
         } catch (error) {
           toast.current.show({
             severity: "danger",
@@ -115,17 +81,23 @@ export default function Plants({ data, id }: any) {
   return (
     <>
       <Layout title="Plantas">
-        <div className="flex flex-row-reverse px-1 pb-3">
-          <Button
+        <div className="flex justify-end pb-4 xs:justify-center">
+          {/* <Button
             icon="pi pi-plus"
             className="p-button-outlined p-button-rounded p-button-primary"
             label="Adicionar planta"
             onClick={handleCreate}
-          ></Button>
+          ></Button> */}
+          <button className="flex px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full" onClick={handleCreate}>
+            <span>
+
+            <PlusSmIcon className="w-5 h-5" />
+            </span>
+            MyButton
+          </button>
         </div>
         <Table
           data={plants}
-          photo={true}
           columns={columns}
           handleDetail={handleDetail}
           handleDelete={handleDelete}

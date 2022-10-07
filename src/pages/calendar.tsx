@@ -37,6 +37,7 @@ interface IActivity {
     photo?: any;
   };
 }
+//TODO: AO CLICAR EM EDITAR, REDIRECIONAR PARA A PLANTA
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
