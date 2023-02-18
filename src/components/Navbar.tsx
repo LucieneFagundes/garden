@@ -6,20 +6,10 @@ import avatar from "../public/avatar.jpg";
 import { AuthContext } from "../contexts/AuthContext";
 import Link from "next/link";
 
-// const user = {
-//     name: 'Luciene Fagundes',
-//     email: 'lfnascimento99@gmail.com',
-//     imageUrl:
-//         'https://github.com/LucieneFagundes.png',
-// }
-// let avatar = require("./src/public/avatar.png")
-
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Plantas", href: "/plants", current: false },
   { name: "Agenda", href: "/calendar", current: false },
-  // { name: 'Calendar', href: '#', current: false },
-  // { name: 'Reports', href: '#', current: false },
 ];
 const userNavigation = [
   { name: "Meu perfil", href: "#" },
@@ -47,11 +37,13 @@ export default function Navbar({ user }: any) {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-8 w-8"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                    />
+                    <picture>
+                      <img
+                        className="h-8 w-8"
+                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                        alt="Workflow"
+                      />
+                    </picture>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
