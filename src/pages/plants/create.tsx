@@ -17,7 +17,6 @@ interface IPlant {
 }
 
 export default function CreatePlant() {
-  //TODO : Melhorar a estrutura de upload, e tornar um componente
   const { user } = useContext(AuthContext);
   const [image, setImage] = useState(undefined);
   const [photo, setPhoto] = useState(undefined);
@@ -42,6 +41,7 @@ export default function CreatePlant() {
   }
 
   async function handleChange(event: any) {
+    console.log(event);
     event.preventDefault();
 
     if (!event.target.files || event.target.files.length === 0) {
@@ -57,7 +57,6 @@ export default function CreatePlant() {
 
   //FUNCIONANDO
   async function handleCreate(plant: IPlant) {
-    //TODO: Fazer tratativa de campos vazios para null no backend.
     try {
       plant.photo = photo.toString();
     } catch (error) {
@@ -73,14 +72,13 @@ export default function CreatePlant() {
       <Layout title="Cadastrar nova planta">
         <Formik initialValues={initialValues} onSubmit={handleCreate}>
           <Form action="#" method="POST">
-
-            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
+            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap xs:flex-wrap">
               {/* PARTE DA FOTO E PREVIEW */}
               {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
               {/* TODO: Botão de remoção de imagem do input */}
               {/* TODO: Redimencionar imagem antes de salvar */}
-              <div className="flex flex-col w-auto items-center">
-                <div className="border-solid  border-indigo-600">
+              <div className="flex flex-col w-auto items-center xs:w-3/4">
+                <div className="border-solid  border-indigo-600 ">
                   <Image src={preview != undefined ? preview : noImage}
                     width={300} height={300} alt="previewImage"
                     objectFit="cover"
@@ -91,15 +89,15 @@ export default function CreatePlant() {
                   name="photo"
                   type="file"
                   accept="image/jpg, image/png, image/jpeg"
+                  capture
                   onChange={(e) => handleChange(e)}
-                  // size={5000000}
                   className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-indigo-600
                   hover:file:bg-violet-10"
                 />
               </div>
 
               {/* PARTE DO RESTANTE DO FORMULÁRIO */}
-              <div className="rounded-md space-y-2 w-full max-w-lg">
+              <div className="rounded-md space-y-2 w-full max-w-lg xs:pt-3">
                 <div>
                   <label htmlFor="name" className="">Nome <span>*</span></label>
                   <Field

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import noImage from "../public/noImage.png";
 import Image from "next/image";
 
-interface Props {
+interface TableProps {
   data: any;
   columns: any;
   handleDetail: (data: any) => void;
@@ -17,7 +17,7 @@ export default function Table({
   columns,
   handleDetail,
   handleDelete,
-}: Props) {
+}: TableProps) {
   const imageBodyTemplate = (rowData) => {
     return (
       <Image

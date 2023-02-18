@@ -88,13 +88,13 @@ export default function Plants({ data, id }: any) {
             onClick={handleCreate}
           ></Button> */}
           <button
-            className="flex px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full"
+            className="flex items-center px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full hover:text-green-100 hover:bg-green-600 hover:transition"
             onClick={handleCreate}
           >
             <span>
               <PlusSmIcon className="w-5 h-5" />
             </span>
-            MyButton
+            Nova Planta
           </button>
         </div>
         <Table
