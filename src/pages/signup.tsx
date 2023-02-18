@@ -1,50 +1,54 @@
-import { ArrowLeftIcon, LockClosedIcon, LoginIcon, PencilAltIcon } from "@heroicons/react/outline";
+import {
+  ArrowLeftIcon,
+  LockClosedIcon,
+  LoginIcon,
+  PencilAltIcon,
+} from "@heroicons/react/outline";
 import { Formik, Form, Field } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import logo from "../public/logo.png"
+import logo from "../public/logo.png";
 
 export default function SignUp() {
-
   interface ISignUp {
     name: string;
     email: string;
     password: string;
   }
 
-  const { signUp } = useContext(AuthContext)
+  const { signUp } = useContext(AuthContext);
   const initialValues = {
-    name: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-  }
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  };
 
   async function handleSignUp({ name, email, password }: ISignUp) {
-    await signUp({ name, email, password })
+    await signUp({ name, email, password });
   }
-
 
   return (
     <>
       <div className="h-screen flex items-center justify-center sm:px-6 bg-brand-100">
         <div className="max-w-md w-full space-y-4">
-          <div className="flex flex-col items-center">
-            <Image
-              className="mx-auto h-28 w-auto"
-              src={logo}
-              width={150}
-              height={190}
-              alt="Logo"
-            />
-            <h2 className="text-center text-3xl font-light text-gray-900">GARDENE</h2>
-          </div>
           <div className="border rounded-md px-4 shadow-md shadow-slate-400 bg-gray-50 xs:mx-2 xs:px-2">
+            <div className="flex flex-col items-center pt-3">
+              <Image
+                className="mx-auto h-28 w-auto"
+                src={logo}
+                width={150}
+                height={190}
+                alt="Logo"
+              />
+              <h2 className="text-center text-3xl font-light text-gray-900">
+                GARDENE
+              </h2>
+            </div>
             <Formik initialValues={initialValues} onSubmit={handleSignUp}>
               <Form className="mt-4 space-y-6" action="#" method="POST">
-                <h3 className="border-b text-center text-gray-900">Cadastre-se</h3>
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="rounded-md space-y-2">
                   <div>
@@ -100,7 +104,10 @@ export default function SignUp() {
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                      <LoginIcon className="h-5 w-5 text-green-300 group-hover:text-green-100" aria-hidden="true" />
+                      <LoginIcon
+                        className="h-5 w-5 text-green-300 group-hover:text-green-100"
+                        aria-hidden="true"
+                      />
                     </span>
                     Cadastrar-me
                   </button>
@@ -119,5 +126,5 @@ export default function SignUp() {
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import type { NextPage } from 'next'
-import { LockClosedIcon } from '@heroicons/react/outline'
-import { Formik, Form, Field } from 'formik'
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
-import Link from 'next/link';
-import Image from 'next/image';
-import logo from "../public/logo.png"
+import type { NextPage } from "next";
+import { LockClosedIcon } from "@heroicons/react/outline";
+import { Formik, Form, Field } from "formik";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import Link from "next/link";
+import Image from "next/image";
+import logo from "../public/logo.png";
 
 interface ISignIn {
   email: string;
@@ -13,11 +13,10 @@ interface ISignIn {
 }
 
 const Login: NextPage = () => {
-
   const initialValues = {
-    email: '',
-    password: ''
-  }
+    email: "",
+    password: "",
+  };
 
   const { signIn } = useContext(AuthContext);
 
@@ -33,20 +32,21 @@ const Login: NextPage = () => {
     <>
       <div className="h-screen flex items-center justify-center sm:px-6 bg-brand-100">
         <div className="max-w-md w-full space-y-4">
-          <div className="flex flex-col items-center">
-            <Image
-              className="mx-auto h-28 w-auto"
-              src={logo}
-              width={150}
-              height={190}
-              alt="Logo"
-            />
-            <h2 className="mt-6 text-center text-3xl font-light text-gray-900">GARDENE</h2>
-          </div>
           <div className="border rounded-md px-4 shadow-md shadow-slate-400 bg-gray-50 xs:mx-2 xs:px-2">
+            <div className="flex flex-col items-center pt-3">
+              <Image
+                className="mx-auto h-28 w-auto"
+                src={logo}
+                width={150}
+                height={190}
+                alt="Logo"
+              />
+              <h2 className="mt-6 text-center text-3xl font-light text-gray-900">
+                GARDENE
+              </h2>
+            </div>
             <Formik initialValues={initialValues} onSubmit={handleSignIn}>
               <Form className="mt-4 space-y-6" action="#" method="POST">
-                <h3 className="border-b text-center text-gray-900">Entrar</h3>
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="rounded-md space-y-2">
                   <div>
@@ -84,14 +84,20 @@ const Login: NextPage = () => {
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                      <LockClosedIcon className="h-5 w-5 text-green-300 group-hover:text-green-100" aria-hidden="true" />
+                      <LockClosedIcon
+                        className="h-5 w-5 text-green-300 group-hover:text-green-100"
+                        aria-hidden="true"
+                      />
                     </span>
                     Entrar
                   </button>
                 </div>
 
                 <div className="flex flex-row items-center justify-between pb-2 text-sm font-medium">
-                  <a href="#" className="text-green-600 hover:text-green-700 hover:font-bold">
+                  <a
+                    href="#"
+                    className="text-green-600 hover:text-green-700 hover:font-bold"
+                  >
                     Esqueceu a senha?
                   </a>
                   <Link href="/signup">
@@ -106,7 +112,7 @@ const Login: NextPage = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
