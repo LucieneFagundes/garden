@@ -7,9 +7,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import Link from "next/link";
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
+  { name: "Agenda", href: "/", current: false },
   { name: "Plantas", href: "/plants", current: false },
-  { name: "Agenda", href: "/calendar", current: false },
 ];
 const userNavigation = [
   { name: "Meu perfil", href: "#" },

@@ -50,7 +50,7 @@ export default function Plants({ data, id }: any) {
     confirmDialog({
       message: `Deseja apagar a planta "${data.name}"?`,
       header: "Confirmação de exclusão",
-      icon: "pi pi-info-circle",
+      icon: "pi pi-exclamation-triangle",
       acceptClassName: "p-button-danger p-button-sm",
       rejectClassName: "p-button p-button-sm",
       acceptLabel: "Sim",
