@@ -3,13 +3,11 @@ import {
   getPlantsRequest,
   setDeletePlant,
 } from "../../services/plant-services";
+import React, { useState, useRef, useEffect } from "react";
+import Router from "next/router";
 import Table from "../../components/TablePlants";
 import Layout from "../../components/Layout";
-import Router from "next/router";
-
-import React, { useState, useRef, useEffect } from "react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { PlusSmIcon } from "@heroicons/react/outline";
 

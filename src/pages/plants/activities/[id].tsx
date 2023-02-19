@@ -99,7 +99,7 @@ export default function Activities({ data, activities }: any) {
           </div>
         </div>
 
-        <div className="rounded-md space-y-2 w-4/5 ">
+        <div className="rounded-md space-y-2 w-4/5 flex flex-col gap-2">
           <div className="flex">
             <button
               type="button"
@@ -130,13 +130,11 @@ export default function Activities({ data, activities }: any) {
               Adicionar tarefa
             </button>
           </div>
-          <div>
-            <Table
-              data={tasks}
-              handleDelete={handleDelete}
-              handleEdit={handleEdit}
-            />
-          </div>
+          <Table
+            data={tasks}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+          />
         </div>
       </div>
     </Layout>
