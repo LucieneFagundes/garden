@@ -63,7 +63,7 @@ export default function Activities({ data, activities }: any) {
   }
 
   return (
-    <Layout title={`${data.name}`}>
+    <Layout title={`Atividades da planta: ${data.name}`}>
       <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
         <div className="flex flex-col w-auto">
           <div className="items-center">

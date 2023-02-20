@@ -258,14 +258,11 @@ function Meeting({ meeting, handleEvent }) {
           </time> */}
         </p>
       </div>
-      <Menu
-        as="div"
-        className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
-      >
+      <Menu as="div" className="relative">
         <div>
-          <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
+          <Menu.Button className="m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
             <span className="sr-only">Open options</span>
-            <DotsVerticalIcon className="w-6 h-6" aria-hidden="true" />
+            <DotsVerticalIcon className="w-6 h-6" />
           </Menu.Button>
         </div>
 
@@ -286,7 +283,7 @@ function Meeting({ meeting, handleEvent }) {
                     onClick={() => handleEvent(meeting)}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      "block px-4 py-2 text-sm w-full m-0 text-start"
                     )}
                   >
                     Concluir
@@ -302,7 +299,7 @@ function Meeting({ meeting, handleEvent }) {
                       "block px-4 py-2 text-sm"
                     )}
                   >
-                    Edit
+                    Editar
                   </a>
                 )}
               </Menu.Item>
@@ -315,7 +312,7 @@ function Meeting({ meeting, handleEvent }) {
                       "block px-4 py-2 text-sm"
                     )}
                   >
-                    Cancel
+                    Cancelar
                   </a>
                 )}
               </Menu.Item>

@@ -78,15 +78,10 @@ export default function Plants({ data, id }: any) {
   return (
     <>
       <Layout title="Plantas">
-        <div className="flex justify-end pb-4 xs:justify-center">
-          {/* <Button
-            icon="pi pi-plus"
-            className="p-button-outlined p-button-rounded p-button-primary"
-            label="Adicionar planta"
-            onClick={handleCreate}
-          ></Button> */}
+        <div className="flex justify-end pb-4">
           <button
-            className="flex items-center px-4 py-2 font-bold text-green-600 border-green-600 border-2 rounded-full hover:text-green-100 hover:bg-green-600 hover:transition"
+            className="relative xs:w-full xs:justify-center flex justify-end py-2 px-4 border border-transparent text-sm font-medium rounded-md mr-1
+            text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             onClick={handleCreate}
           >
             <span>

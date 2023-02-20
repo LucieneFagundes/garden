@@ -97,7 +97,7 @@ export default function Navbar({ user }: any) {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col">
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col z-50">
                           <Menu.Item>
                             <button className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300">
                               Seu perfil
