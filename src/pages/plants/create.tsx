@@ -9,53 +9,38 @@ import Image from "next/image";
 import { getBase64Image } from "../../utils/utils";
 
 interface IPlant {
-  name: string
-  species?: string
-  notes?: string
-  photo?: string | ArrayBuffer
+  name: string;
+  species?: string;
+  notes?: string;
+  photo?: string | ArrayBuffer;
   userId: string;
 }
 
 export default function CreatePlant() {
   const { user } = useContext(AuthContext);
-  const [image, setImage] = useState(undefined);
   const [photo, setPhoto] = useState(undefined);
-  const [preview, setPreview] = useState(undefined);
-
-  useEffect(() => {
-    if (!image) {
-      setPreview(noImage)
-      return
-    }
-    const objectUrl = URL.createObjectURL(image)
-    setPreview(objectUrl)
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [image])
 
   const initialValues: IPlant = {
-    name: '',
-    species: '',
-    notes: '',
-    photo: '',
-    userId: user?.id
-  }
+    name: "",
+    species: "",
+    notes: "",
+    photo: "",
+    userId: user?.id,
+  };
 
   async function handleChange(event: any) {
-    console.log(event);
     event.preventDefault();
 
     if (!event.target.files || event.target.files.length === 0) {
-      setImage(noImage)
-      return
+      setPhoto(undefined);
+      return;
     }
-    setImage(event.target.files[0])
 
     const file = event.target.files[0];
     const fileBase64 = await getBase64Image(file);
     setPhoto(fileBase64);
   }
 
-  //FUNCIONANDO
   async function handleCreate(plant: IPlant) {
     try {
       plant.photo = photo.toString();
@@ -64,7 +49,7 @@ export default function CreatePlant() {
     }
     plant.userId = user.id;
     await setNewPlant(plant);
-    Router.push("/plants")
+    Router.push("/plants");
   }
 
   return (
@@ -73,19 +58,17 @@ export default function CreatePlant() {
         <Formik initialValues={initialValues} onSubmit={handleCreate}>
           <Form action="#" method="POST">
             <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap xs:flex-wrap">
-              {/* PARTE DA FOTO E PREVIEW */}
-              {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
-              {/* TODO: Botão de remoção de imagem do input */}
-              {/* TODO: Redimencionar imagem antes de salvar */}
-              <div className="flex flex-col w-auto items-center xs:w-3/4">
-                <div className="border-solid  border-indigo-600 ">
-                  <Image src={preview != undefined ? preview : noImage}
-                    width={300} height={300} alt="previewImage"
-                    objectFit="cover"
-                    className="rounded-xl"
-                  />
-                </div>
-                <input id="photo"
+              <div className="flex flex-col w-auto items-center xs:w-3/4 gap-2">
+                <Image
+                  src={photo ? photo : noImage}
+                  width={300}
+                  height={300}
+                  alt="previewImage"
+                  objectFit="cover"
+                  className="rounded-xl"
+                />
+                <input
+                  id="photo"
                   name="photo"
                   type="file"
                   accept="image/jpg, image/png, image/jpeg"
@@ -95,11 +78,11 @@ export default function CreatePlant() {
                   hover:file:bg-violet-10"
                 />
               </div>
-
-              {/* PARTE DO RESTANTE DO FORMULÁRIO */}
               <div className="rounded-md space-y-2 w-full max-w-lg xs:pt-3">
                 <div>
-                  <label htmlFor="name" className="">Nome <span>*</span></label>
+                  <label htmlFor="name" className="">
+                    Nome <span>*</span>
+                  </label>
                   <Field
                     id="name"
                     name="name"
@@ -111,7 +94,9 @@ export default function CreatePlant() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="species" className="">Espécie</label>
+                  <label htmlFor="species" className="">
+                    Espécie
+                  </label>
                   <Field
                     id="species"
                     name="species"
@@ -122,8 +107,11 @@ export default function CreatePlant() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="notes" className="">Anotações</label>
-                  <Field component="textarea"
+                  <label htmlFor="notes" className="">
+                    Anotações
+                  </label>
+                  <Field
+                    component="textarea"
                     id="notes"
                     name="notes"
                     type="text"
@@ -142,12 +130,10 @@ export default function CreatePlant() {
                   </button>
                 </div>
               </div>
-
             </div>
-
           </Form>
         </Formik>
       </Layout>
     </>
-  )
+  );
 }
