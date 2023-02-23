@@ -11,8 +11,7 @@ const navigation = [
   { name: "Plantas", href: "/plants", current: false },
 ];
 const userNavigation = [
-  { name: "Meu perfil", href: "#" },
-  { name: "Configurações", href: "#" },
+  { name: "Meu perfil", href: "/profile" },
   { name: "Sair", href: "#" },
 ];
 
@@ -99,22 +98,21 @@ export default function Navbar({ user }: any) {
                       >
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col z-50">
                           <Menu.Item>
-                            <button className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300">
+                            <Link
+                              href="/profile"
+                              className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300 cursor-pointer"
+                            >
                               Seu perfil
-                            </button>
+                            </Link>
                           </Menu.Item>
                           <Menu.Item>
-                            <button className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300">
-                              Configurações
-                            </button>
-                          </Menu.Item>
-                          <Menu.Item>
-                            <button
+                            <Link
+                              href="#"
                               onClick={handleLogout}
                               className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300"
                             >
                               Sair
-                            </button>
+                            </Link>
                           </Menu.Item>
                         </Menu.Items>
                       </Transition>
@@ -186,7 +184,6 @@ export default function Navbar({ user }: any) {
                     <Disclosure.Button
                       key={item.name}
                       as="a"
-                      onClick={() => {}}
                       href={item.href}
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                     >
