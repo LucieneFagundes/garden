@@ -5,6 +5,7 @@ import Image from "next/image";
 import avatar from "../public/avatar.jpg";
 import { AuthContext } from "../contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const navigation = [
   { name: "Agenda", href: "/", current: false },
@@ -21,7 +22,11 @@ function classNames(...classes: string[]) {
 
 export default function Navbar({ user }: any) {
   const { logout } = useContext(AuthContext);
+  const router = useRouter();
 
+  function handlePush() {
+    router.push("/profile");
+  }
   function handleLogout() {
     logout();
   }
@@ -98,21 +103,20 @@ export default function Navbar({ user }: any) {
                       >
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col z-50">
                           <Menu.Item>
-                            <Link
-                              href="/profile"
+                            <button
+                              onClick={handlePush}
                               className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300 cursor-pointer"
                             >
                               Seu perfil
-                            </Link>
+                            </button>
                           </Menu.Item>
                           <Menu.Item>
-                            <Link
-                              href="#"
+                            <button
                               onClick={handleLogout}
                               className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300"
                             >
                               Sair
-                            </Link>
+                            </button>
                           </Menu.Item>
                         </Menu.Items>
                       </Transition>
