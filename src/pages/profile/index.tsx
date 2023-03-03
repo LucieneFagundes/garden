@@ -5,6 +5,7 @@ import Image from "next/image";
 import Layout from "../../components/Layout";
 import avatar from "../../public/avatar.jpg";
 import Link from "next/link";
+import { PencilIcon } from "@heroicons/react/outline";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -32,8 +33,11 @@ export default function Profile() {
           <Link href={"/profile/update"}>
             <a
               className="relative py-2 px-4 border border-transparent text-sm font-medium rounded-md
-            text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+              flex items-center
+            "
             >
+              <PencilIcon className="h-5 w-5 pr-1 text-white group-hover:text-white" />
               editar
             </a>
           </Link>

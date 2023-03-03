@@ -7,6 +7,8 @@ import { recoveryUser, updateUser } from "../../services/user-service";
 import { getBase64Image } from "../../utils/utils";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { ArrowLeftIcon, ClipboardIcon } from "@heroicons/react/outline";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -76,6 +78,19 @@ export default function UpdateProfile({ dataUser }) {
   return (
     <Layout title="Editar meus dados">
       <>
+        <div className="flex justify-end my-1">
+          <Link href={"/profile"}>
+            <a
+              className="relative py-2 px-4 border border-transparent text-sm font-medium rounded-md
+            text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+              flex items-center
+            "
+            >
+              <ArrowLeftIcon className="h-5 w-5 pr-1 text-white group-hover:text-white" />
+              voltar
+            </a>
+          </Link>
+        </div>
         <Formik
           initialValues={initualValues}
           onSubmit={(values, { setSubmitting }) => {
@@ -146,9 +161,11 @@ export default function UpdateProfile({ dataUser }) {
                   <div className="flex justify-center">
                     <button
                       type="submit"
-                      className="relative py-2 px-4 border border-transparent text-sm font-medium rounded-md
-                  text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="w-full relative py-2 px-4 border border-transparent text-sm font-medium rounded-md
+                  text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                  flex items-center justify-center"
                     >
+                      <ClipboardIcon className="h-5 w-5 pr-1 text-white group-hover:text-white" />
                       Salvar
                     </button>
                   </div>
