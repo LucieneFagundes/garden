@@ -1,13 +1,9 @@
-import {
-  ArrowLeftIcon,
-  LockClosedIcon,
-  LoginIcon,
-  PencilAltIcon,
-} from "@heroicons/react/outline";
+import { ArrowLeftIcon, LoginIcon } from "@heroicons/react/outline";
 import { Formik, Form, Field } from "formik";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
+import { Toast } from "primereact/toast";
+import { useContext, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import logo from "../public/logo.png";
 
@@ -16,9 +12,11 @@ export default function SignUp() {
     name: string;
     email: string;
     password: string;
+    passwordConfirm: string;
   }
 
   const { signUp } = useContext(AuthContext);
+  const toast = useRef(null);
   const initialValues = {
     name: "",
     email: "",
@@ -26,8 +24,31 @@ export default function SignUp() {
     passwordConfirm: "",
   };
 
-  async function handleSignUp({ name, email, password }: ISignUp) {
-    await signUp({ name, email, password });
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
+
+  async function handleSignUp({
+    name,
+    email,
+    password,
+    passwordConfirm,
+  }: ISignUp) {
+    if (password !== passwordConfirm) {
+      showError("A senhas devem ser iguais");
+      return;
+    }
+
+    try {
+      await signUp({ name, email, password });
+    } catch (e) {
+      showError(e.response.data.message);
+    }
   }
 
   return (
@@ -125,6 +146,7 @@ export default function SignUp() {
           </div>
         </div>
       </div>
+      <Toast ref={toast} />
     </>
   );
 }

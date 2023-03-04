@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import { LockClosedIcon } from "@heroicons/react/outline";
+import { Toast } from "primereact/toast";
 import { Formik, Form, Field } from "formik";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,18 +14,28 @@ interface ISignIn {
 }
 
 const Login: NextPage = () => {
+  const { signIn } = useContext(AuthContext);
+  const toast = useRef(null);
+
   const initialValues = {
     email: "",
     password: "",
   };
 
-  const { signIn } = useContext(AuthContext);
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   async function handleSignIn({ email, password }: ISignIn) {
     try {
       await signIn({ email, password });
     } catch (error) {
-      console.log(error);
+      showError(error.response.data.message);
     }
   }
 
@@ -111,6 +122,7 @@ const Login: NextPage = () => {
           </div>
         </div>
       </div>
+      <Toast ref={toast} />
     </>
   );
 };
