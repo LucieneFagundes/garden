@@ -8,8 +8,9 @@ import Image from "next/image";
 import { parseCookies } from "nookies";
 import Layout from "../../../components/Layout";
 import noImage from "../../../public/noImage.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getBase64Image } from "../../../utils/utils";
+import { Toast } from "primereact/toast";
 
 interface IPlant {
   data: {
@@ -42,9 +43,9 @@ export async function getServerSideProps(ctx: any) {
 
 export default function Plant({ data }: IPlant) {
   const [photoSave, setPhotoSave] = useState(undefined);
-
   const { name, species, photo, notes } = data;
   const initialValues = { name, species, photo, notes };
+  const toast = useRef(null);
 
   useEffect(() => {
     if (!photo) {
@@ -74,9 +75,18 @@ export default function Plant({ data }: IPlant) {
       await setPlantUpdate({ id: data.id, name, species, photo, notes });
       Router.push("/plants");
     } catch (error) {
-      console.log(error);
+      showError(error.response.data.message);
     }
   }
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   return (
     <>
@@ -155,6 +165,7 @@ export default function Plant({ data }: IPlant) {
             </div>
           </Form>
         </Formik>
+        <Toast ref={toast} />
       </Layout>
     </>
   );

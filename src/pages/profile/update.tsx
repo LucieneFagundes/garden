@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from "formik";
 import Image from "next/image";
 import { parseCookies } from "nookies";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { recoveryUser, updateUser } from "../../services/user-service";
 import { getBase64Image } from "../../utils/utils";
@@ -9,6 +9,7 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { ArrowLeftIcon, ClipboardIcon } from "@heroicons/react/outline";
+import { Toast } from "primereact/toast";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -39,6 +40,7 @@ interface IUser {
 export default function UpdateProfile({ dataUser }) {
   const { user, setUpdateUser } = useContext(AuthContext);
   const [image, setImage] = useState(undefined);
+  const toast = useRef(null);
   const nav = useRouter();
 
   const initualValues: IUser = {
@@ -71,9 +73,18 @@ export default function UpdateProfile({ dataUser }) {
       setUpdateUser(userToSave);
       nav.push("/profile");
     } catch (error) {
-      console.log(error);
+      showError(error.response.data.message);
     }
   }
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   return (
     <Layout title="Editar meus dados">
@@ -174,6 +185,7 @@ export default function UpdateProfile({ dataUser }) {
             </Form>
           )}
         </Formik>
+        <Toast ref={toast} />
       </>
     </Layout>
   );

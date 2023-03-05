@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Layout from "../../../../components/Layout";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
@@ -8,6 +8,7 @@ import { setActivity } from "../../../../services/activities-services";
 import { parseCookies } from "nookies";
 import { getPlantByIdRequest } from "../../../../services/plant-services";
 import Router from "next/router";
+import { Toast } from "primereact/toast";
 
 export async function getServerSideProps(ctx: any) {
   const { ["auth.token"]: token } = parseCookies(ctx);
@@ -31,7 +32,7 @@ interface Props {
 }
 
 export default function RegisterActivity({ id }: Props) {
-  //PrimeReact
+  const toast = useRef(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedPeriodQt, setSelectedPeriodQt] = useState(1);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
@@ -52,7 +53,6 @@ export default function RegisterActivity({ id }: Props) {
     { name: "Mês", key: "mes" },
   ];
 
-  //Date
   let today = new Date();
   let month = today.getMonth();
   let year = today.getFullYear();
@@ -63,7 +63,6 @@ export default function RegisterActivity({ id }: Props) {
   minDate.setMonth(prevMonth);
   minDate.setFullYear(prevYear);
 
-  //Formik
   const initialValues = {
     plantId: id,
     activity: "",
@@ -72,6 +71,16 @@ export default function RegisterActivity({ id }: Props) {
     initial_event: "",
     notes: "",
   };
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
+
   async function handleCreateActivity(data: any) {
     try {
       data.activity = selectedActivity.key;
@@ -82,7 +91,8 @@ export default function RegisterActivity({ id }: Props) {
       await setActivity(data);
       Router.back();
     } catch (err) {
-      console.log(err);
+      const errorMessage = err.response.data.message;
+      showError(errorMessage);
     }
   }
 
@@ -170,6 +180,7 @@ export default function RegisterActivity({ id }: Props) {
           </div>
         </Form>
       </Formik>
+      <Toast ref={toast} />
     </Layout>
   );
 }

@@ -4,7 +4,8 @@ import { parseCookies } from "nookies";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import { useEffect, useRef, useState } from "react";
 import Layout from "../../../../components/Layout";
 import {
   getActivity,
@@ -51,7 +52,7 @@ export default function UpdateActivity({ data }) {
   const [selectedDate, setSelectedDate] = useState<Date | Date[] | undefined>(
     undefined
   );
-
+  const toast = useRef(null);
   const activities = [
     { name: "Regar", key: "regar" },
     { name: "Fertilizar", key: "fertilizar" },
@@ -116,10 +117,19 @@ export default function UpdateActivity({ data }) {
 
       await setUpdateActivity(data);
       Router.back();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      showError(error.response.data.message);
     }
   }
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   return (
     <Layout title="Editar atividade">
@@ -202,6 +212,7 @@ export default function UpdateActivity({ data }) {
           </div>
         </Form>
       </Formik>
+      <Toast ref={toast} />
     </Layout>
   );
 }
