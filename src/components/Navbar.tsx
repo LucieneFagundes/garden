@@ -1,11 +1,12 @@
 import { Fragment, useContext } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import Link from "next/link";
+import { AuthContext } from "../contexts/AuthContext";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 import avatar from "../public/avatar.jpg";
-import { AuthContext } from "../contexts/AuthContext";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import logo from "../public/logo.png";
 
 const navigation = [
   { name: "Agenda", href: "/", current: false },
@@ -41,9 +42,11 @@ export default function Navbar({ user }: any) {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <picture>
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                      <Image
+                        className="bg-white rounded-full"
+                        width={32}
+                        height={32}
+                        src={logo}
                         alt="Workflow"
                       />
                     </picture>

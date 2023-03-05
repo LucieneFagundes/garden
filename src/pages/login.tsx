@@ -41,9 +41,9 @@ const Login: NextPage = () => {
 
   return (
     <>
-      <div className="h-screen flex items-center justify-center sm:px-6 bg-brand-100">
+      <div className="h-screen flex items-center justify-center sm:px-6 bg-white-100">
         <div className="max-w-md w-full space-y-4">
-          <div className="border rounded-md px-4 shadow-md shadow-slate-400 bg-gray-50 xs:mx-2 xs:px-2">
+          <div className="border rounded-md px-4 shadow-md shadow-slate-400 bg-gray-100 xs:mx-2 xs:px-2">
             <div className="flex flex-col items-center pt-3">
               <Image
                 className="mx-auto h-28 w-auto"
