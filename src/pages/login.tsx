@@ -108,6 +108,7 @@ const Login: NextPage = () => {
                   <a
                     href="#"
                     className="text-green-600 hover:text-green-700 hover:font-bold"
+                    title="In development"
                   >
                     Esqueceu a senha?
                   </a>

@@ -6,7 +6,6 @@ import { getPlantByIdRequest } from "../../../services/plant-services";
 import {
   deleteActivity,
   getActivities,
-  getActivity,
 } from "../../../services/activities-services";
 import Layout from "../../../components/Layout";
 import Table from "../../../components/TableActivities";
@@ -49,14 +48,15 @@ export default function Activities({ data, activities }: any) {
   function handleEdit(e) {
     Router.push(`update/${e.id}`);
   }
-  async function handleDelete(e) {
+  async function handleDelete(taskToDelete) {
     try {
-      await deleteActivity(e.id);
+      await deleteActivity(taskToDelete.id);
 
-      const activity = await getActivities(data.id);
-      console.log(activity);
+      const taskWithoutDeleteOne = tasks.filter((t) => {
+        return t.id != taskToDelete.id;
+      });
 
-      setTasks(activity);
+      setTasks(taskWithoutDeleteOne);
     } catch (err) {
       alert("Algo deu errado: " + err.message);
     }

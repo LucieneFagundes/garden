@@ -12,7 +12,7 @@ interface TableProps {
   handleDelete: (data: any) => void;
 }
 
-export default function Table({
+export default function TablePlants({
   data,
   columns,
   handleDetail,

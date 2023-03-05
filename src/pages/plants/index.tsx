@@ -5,7 +5,7 @@ import {
 } from "../../services/plant-services";
 import React, { useState, useRef, useEffect } from "react";
 import Router from "next/router";
-import Table from "../../components/TablePlants";
+import TablePlants from "../../components/TablePlants";
 import Layout from "../../components/Layout";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
@@ -90,7 +90,7 @@ export default function Plants({ data, id }: any) {
             Nova Planta
           </button>
         </div>
-        <Table
+        <TablePlants
           data={plants}
           columns={columns}
           handleDetail={handleDetail}

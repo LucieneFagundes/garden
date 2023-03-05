@@ -1,12 +1,13 @@
-import { Formik, Form, Field, isEmptyArray } from "formik";
+import { Formik, Form, Field } from "formik";
 import Router from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Layout from "../../components/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
 import { setNewPlant } from "../../services/plant-services";
 import noImage from "../../public/noImage.png";
 import Image from "next/image";
 import { getBase64Image } from "../../utils/utils";
+import { Toast } from "primereact/toast";
 
 interface IPlant {
   name: string;
@@ -18,6 +19,7 @@ interface IPlant {
 
 export default function CreatePlant() {
   const { user } = useContext(AuthContext);
+  const toast = useRef(null);
   const [photo, setPhoto] = useState(undefined);
 
   const initialValues: IPlant = {
@@ -26,6 +28,15 @@ export default function CreatePlant() {
     notes: "",
     photo: "",
     userId: user?.id,
+  };
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
   };
 
   async function handleChange(event: any) {
@@ -42,14 +53,17 @@ export default function CreatePlant() {
   }
 
   async function handleCreate(plant: IPlant) {
-    try {
+    if (photo) {
       plant.photo = photo.toString();
-    } catch (error) {
-      console.log(error);
     }
-    plant.userId = user.id;
-    await setNewPlant(plant);
-    Router.push("/plants");
+    try {
+      plant.userId = user.id;
+      await setNewPlant(plant);
+      Router.push("/plants");
+    } catch (e) {
+      const errorMessage = e.response.data.message;
+      showError(errorMessage);
+    }
   }
 
   return (
@@ -133,6 +147,7 @@ export default function CreatePlant() {
             </div>
           </Form>
         </Formik>
+        <Toast ref={toast} />
       </Layout>
     </>
   );
