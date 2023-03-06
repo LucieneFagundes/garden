@@ -1,29 +1,19 @@
 import { Fragment, useContext } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import Link from "next/link";
+import { AuthContext } from "../contexts/AuthContext";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import Image from "next/image";
 import avatar from "../public/avatar.jpg";
-import { AuthContext } from "../contexts/AuthContext";
-import Link from "next/link";
-
-// const user = {
-//     name: 'Luciene Fagundes',
-//     email: 'lfnascimento99@gmail.com',
-//     imageUrl:
-//         'https://github.com/LucieneFagundes.png',
-// }
-// let avatar = require("./src/public/avatar.png")
+import logo from "../public/logo.png";
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
+  { name: "Agenda", href: "/", current: false },
   { name: "Plantas", href: "/plants", current: false },
-  { name: "Agenda", href: "/calendar", current: false },
-  // { name: 'Calendar', href: '#', current: false },
-  // { name: 'Reports', href: '#', current: false },
 ];
 const userNavigation = [
-  { name: "Meu perfil", href: "#" },
-  { name: "Configurações", href: "#" },
+  { name: "Meu perfil", href: "/profile" },
   { name: "Sair", href: "#" },
 ];
 
@@ -33,7 +23,11 @@ function classNames(...classes: string[]) {
 
 export default function Navbar({ user }: any) {
   const { logout } = useContext(AuthContext);
+  const router = useRouter();
 
+  function handlePush() {
+    router.push("/profile");
+  }
   function handleLogout() {
     logout();
   }
@@ -47,11 +41,15 @@ export default function Navbar({ user }: any) {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-8 w-8"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                    />
+                    <picture>
+                      <Image
+                        className="bg-white rounded-full"
+                        width={32}
+                        height={32}
+                        src={logo}
+                        alt="Workflow"
+                      />
+                    </picture>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
@@ -78,6 +76,7 @@ export default function Navbar({ user }: any) {
                     <button
                       type="button"
                       className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                      title="In development"
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -106,15 +105,13 @@ export default function Navbar({ user }: any) {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col">
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-36 p-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col z-50">
                           <Menu.Item>
-                            <button className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300">
+                            <button
+                              onClick={handlePush}
+                              className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300 cursor-pointer"
+                            >
                               Seu perfil
-                            </button>
-                          </Menu.Item>
-                          <Menu.Item>
-                            <button className="p-1 w-full rounded-sm text-center border border-transparent hover:bg-slate-300">
-                              Configurações
                             </button>
                           </Menu.Item>
                           <Menu.Item>
@@ -195,7 +192,6 @@ export default function Navbar({ user }: any) {
                     <Disclosure.Button
                       key={item.name}
                       as="a"
-                      onClick={() => {}}
                       href={item.href}
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                     >

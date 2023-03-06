@@ -3,14 +3,13 @@ import {
   getPlantsRequest,
   setDeletePlant,
 } from "../../services/plant-services";
-import Table from "../../components/TablePlants";
-import Layout from "../../components/Layout";
-import Router from "next/router";
-
 import React, { useState, useRef, useEffect } from "react";
+import Router from "next/router";
+import TablePlants from "../../components/TablePlants";
+import Layout from "../../components/Layout";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
+import { PlusSmIcon } from "@heroicons/react/outline";
 
 interface IPlant {
   id: string;
@@ -19,40 +18,6 @@ interface IPlant {
   photo: string;
   notes: string;
 }
-
-const ConfirmDialogDemo = () => {
-  const [visible, setVisible] = useState<boolean>(false);
-  const toast = useRef(null);
-
-  const accept = () => {
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmed",
-      detail: "You have accepted",
-      life: 3000,
-    });
-  };
-
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
-
-  const confirm2 = () => {
-    confirmDialog({
-      message: "Do you want to delete this record?",
-      header: "Delete Confirmation",
-      icon: "pi pi-info-circle",
-      acceptClassName: "p-button-danger",
-      accept,
-      reject,
-    });
-  };
-};
 
 const columns = [
   { field: "name", header: "Nome" },
@@ -64,13 +29,12 @@ export default function Plants({ data, id }: any) {
   const dataPlants = Array.from(data);
 
   const [plants, setPlants] = useState<any>([]);
-  
-  useEffect(() => { 
-    setPlants(dataPlants)
-  }, [])
+
+  useEffect(() => {
+    setPlants(dataPlants);
+  }, []);
 
   const toast = useRef(null);
-
 
   function handleCreate() {
     Router.push("/plants/create");
@@ -84,7 +48,7 @@ export default function Plants({ data, id }: any) {
     confirmDialog({
       message: `Deseja apagar a planta "${data.name}"?`,
       header: "Confirmação de exclusão",
-      icon: "pi pi-info-circle",
+      icon: "pi pi-exclamation-triangle",
       acceptClassName: "p-button-danger p-button-sm",
       rejectClassName: "p-button p-button-sm",
       acceptLabel: "Sim",
@@ -98,9 +62,8 @@ export default function Plants({ data, id }: any) {
             detail: "Excluido com sucesso",
             life: 3000,
           });
-          const plants = await getPlantsRequest(id); 
+          const plants = await getPlantsRequest(id);
           setPlants(plants);
-          //TODO: acionar o Reload no componente, e não na página inteira
         } catch (error) {
           toast.current.show({
             severity: "danger",
@@ -111,21 +74,24 @@ export default function Plants({ data, id }: any) {
         }
       },
     });
-  } 
+  }
   return (
     <>
       <Layout title="Plantas">
-        <div className="flex flex-row-reverse px-1 pb-3">
-          <Button
-            icon="pi pi-plus"
-            className="p-button-outlined p-button-rounded p-button-primary"
-            label="Adicionar planta"
+        <div className="flex justify-end pb-4">
+          <button
+            className="relative xs:w-full xs:justify-center flex justify-end py-2 px-4 border border-transparent text-sm font-medium rounded-md mr-1
+            text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             onClick={handleCreate}
-          ></Button>
+          >
+            <span>
+              <PlusSmIcon className="w-5 h-5" />
+            </span>
+            Nova Planta
+          </button>
         </div>
-        <Table
+        <TablePlants
           data={plants}
-          photo={true}
           columns={columns}
           handleDetail={handleDetail}
           handleDelete={handleDelete}

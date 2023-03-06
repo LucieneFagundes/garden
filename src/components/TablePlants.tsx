@@ -1,29 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import noImage from "../public/noImage.png";
 import Image from "next/image";
 
-interface Props {
+interface TableProps {
   data: any;
   columns: any;
-  header?: string;
-  photo?: boolean;
-  handleDetail?: (data: any) => void;
-  handleEdit?: (data: any) => void;
-  handleDelete?: (data: any) => void;
+  handleDetail: (data: any) => void;
+  handleDelete: (data: any) => void;
 }
 
-export default function Table({
+export default function TablePlants({
   data,
   columns,
-  header,
   handleDetail,
-  handleEdit,
   handleDelete,
-  photo,
-}: Props) {
+}: TableProps) {
   const imageBodyTemplate = (rowData) => {
     return (
       <Image
@@ -39,45 +33,44 @@ export default function Table({
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        {handleDetail && (
+        <div className="flex justify-around">
           <Button
             icon="pi pi-eye"
-            className="p-button-text  p-button-rounded p-button-primary"
-            label="Ver mais"
+            className="p-button-text p-button-rounded p-button-primary"
             onClick={() => handleDetail(rowData)}
           />
-        )}
-        {handleEdit && (
-          <Button
-            icon="pi pi-pencil"
-            className="p-button-text p-button-rounded p-button-secondary mr-2"
-            onClick={() => handleEdit(rowData)}
-          />
-        )}
-        {handleDelete && (
           <Button
             icon="pi pi-trash"
-            className="p-button-text  p-button-rounded p-button-danger"
+            className="p-button-text p-button-rounded p-button-danger"
             onClick={() => handleDelete(rowData)}
           />
-        )}
+        </div>
       </React.Fragment>
     );
   };
   const dynamicColumns = columns.map((col: any, i: any) => {
-    return <Column key={col.field} field={col.field} header={col.header} />;
+    return (
+      <Column
+        key={col.field}
+        field={col.field}
+        header={col.header}
+        align="center"
+      />
+    );
   });
 
   return (
     <div>
       <div className="card">
-        <DataTable value={data} responsiveLayout="scroll">
-          <Column field="photo" header="Foto" body={imageBodyTemplate}></Column>
-          {dynamicColumns}
+        <DataTable value={data} responsiveLayout="scroll" stripedRows>
           <Column
-            body={actionBodyTemplate}
-            style={{ minWidth: "8rem" }}
+            field="photo"
+            header="Foto"
+            body={imageBodyTemplate}
+            align="center"
           ></Column>
+          {dynamicColumns}
+          <Column align="center" body={actionBodyTemplate}></Column>
         </DataTable>
       </div>
     </div>

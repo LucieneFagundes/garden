@@ -1,10 +1,16 @@
-import { getPlantByIdRequest, setPlantUpdate } from "../../../services/plant-services";
+import {
+  getPlantByIdRequest,
+  setPlantUpdate,
+} from "../../../services/plant-services";
 import Router from "next/router";
 import { Field, Form, Formik } from "formik";
 import Image from "next/image";
 import { parseCookies } from "nookies";
 import Layout from "../../../components/Layout";
 import noImage from "../../../public/noImage.png";
+import { useEffect, useRef, useState } from "react";
+import { getBase64Image } from "../../../utils/utils";
+import { Toast } from "primereact/toast";
 
 interface IPlant {
   data: {
@@ -13,59 +19,105 @@ interface IPlant {
     species?: string;
     notes?: string;
     photo?: string;
-  }
+  };
 }
 
 export async function getServerSideProps(ctx: any) {
-  const { ['auth.token']: token } = parseCookies(ctx);
+  const { ["auth.token"]: token } = parseCookies(ctx);
   if (!token) {
     return {
       redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    }
+        destination: "/login",
+        permanent: false,
+      },
+    };
   }
 
   const id = ctx.query.id;
   const data = await getPlantByIdRequest(id, ctx);
 
   return {
-    props: { data }
-  }
+    props: { data },
+  };
 }
 
-
-
 export default function Plant({ data }: IPlant) {
+  const [photoSave, setPhotoSave] = useState(undefined);
   const { name, species, photo, notes } = data;
+  const initialValues = { name, species, photo, notes };
+  const toast = useRef(null);
 
-  const initialValues = { name, species, photo, notes, }
+  useEffect(() => {
+    if (!photo) {
+      setPhotoSave(undefined);
+      return;
+    }
+
+    setPhotoSave(photo);
+  }, [photo]);
+
+  async function handleChange(event: any) {
+    event.preventDefault();
+
+    if (!event.target.files || event.target.files.length === 0) {
+      setPhotoSave(undefined);
+      return;
+    }
+
+    const file = event.target.files[0];
+    const fileBase64 = await getBase64Image(file);
+    setPhotoSave(fileBase64);
+  }
 
   async function handleUpdate({ id, name, species, photo, notes }) {
     try {
-      await setPlantUpdate({ id: data.id, name, species, photo, notes })
-      Router.push('/plants')
+      photo = photoSave.toString();
+      await setPlantUpdate({ id: data.id, name, species, photo, notes });
+      Router.push("/plants");
     } catch (error) {
-      console.log(error);
+      showError(error.response.data.message);
     }
   }
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   return (
     <>
       <Layout title={`Editar ${name}`}>
         <Formik initialValues={initialValues} onSubmit={handleUpdate}>
           <Form action="#" method="POST">
-            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
-              <div className="">
-                {/* TODO : Manipulação de imagem para edição*/}
-                <Image width={300} height={300} src={photo ? photo : noImage} alt="Plant photo" />
+            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap xs:flex-wrap">
+              <div className="flex flex-col w-auto items-center xs:w-3/4 gap-2">
+                <Image
+                  width={300}
+                  height={300}
+                  src={photoSave ? photoSave : noImage}
+                  className="rounded-xl border-slate-50 border-2"
+                  alt="Plant photo"
+                />
+                <input
+                  id="photo"
+                  name="photo"
+                  type="file"
+                  accept="image/jpg, image/png, image/jpeg"
+                  capture
+                  onChange={(e) => handleChange(e)}
+                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-indigo-600
+                  hover:file:bg-violet-10"
+                />
               </div>
-
-
               <div className="rounded-md space-y-2 w-full max-w-lg">
                 <div>
-                  <label htmlFor="name" className="">Nome</label>
+                  <label htmlFor="name" className="">
+                    Nome
+                  </label>
                   <Field
                     id="name"
                     name="name"
@@ -76,7 +128,9 @@ export default function Plant({ data }: IPlant) {
                   />
                 </div>
                 <div>
-                  <label htmlFor="species" className="">Espécie</label>
+                  <label htmlFor="species" className="">
+                    Espécie
+                  </label>
                   <Field
                     id="species"
                     name="species"
@@ -86,8 +140,11 @@ export default function Plant({ data }: IPlant) {
                   />
                 </div>
                 <div>
-                  <label htmlFor="notes" className="">Anotações</label>
-                  <Field component="textarea"
+                  <label htmlFor="notes" className="">
+                    Anotações
+                  </label>
+                  <Field
+                    component="textarea"
                     id="notes"
                     name="notes"
                     type="text"
@@ -105,12 +162,11 @@ export default function Plant({ data }: IPlant) {
                   </button>
                 </div>
               </div>
-
             </div>
-
           </Form>
         </Formik>
+        <Toast ref={toast} />
       </Layout>
     </>
-  )
+  );
 }

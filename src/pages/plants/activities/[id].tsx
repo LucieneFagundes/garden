@@ -6,7 +6,6 @@ import { getPlantByIdRequest } from "../../../services/plant-services";
 import {
   deleteActivity,
   getActivities,
-  getActivity,
 } from "../../../services/activities-services";
 import Layout from "../../../components/Layout";
 import Table from "../../../components/TableActivities";
@@ -49,21 +48,22 @@ export default function Activities({ data, activities }: any) {
   function handleEdit(e) {
     Router.push(`update/${e.id}`);
   }
-  async function handleDelete(e) {
+  async function handleDelete(taskToDelete) {
     try {
-      await deleteActivity(e.id);
+      await deleteActivity(taskToDelete.id);
 
-      const activity = await getActivities(data.id);
-      console.log(activity);
+      const taskWithoutDeleteOne = tasks.filter((t) => {
+        return t.id != taskToDelete.id;
+      });
 
-      setTasks(activity);
+      setTasks(taskWithoutDeleteOne);
     } catch (err) {
       alert("Algo deu errado: " + err.message);
     }
   }
 
   return (
-    <Layout title={`${data.name}`}>
+    <Layout title={`Atividades da planta: ${data.name}`}>
       <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
         <div className="flex flex-col w-auto">
           <div className="items-center">
@@ -99,7 +99,7 @@ export default function Activities({ data, activities }: any) {
           </div>
         </div>
 
-        <div className="rounded-md space-y-2 w-4/5 ">
+        <div className="rounded-md space-y-2 w-4/5 flex flex-col gap-2">
           <div className="flex">
             <button
               type="button"
@@ -130,13 +130,11 @@ export default function Activities({ data, activities }: any) {
               Adicionar tarefa
             </button>
           </div>
-          <div>
-            <Table
-              data={tasks}
-              handleDelete={handleDelete}
-              handleEdit={handleEdit}
-            />
-          </div>
+          <Table
+            data={tasks}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+          />
         </div>
       </div>
     </Layout>

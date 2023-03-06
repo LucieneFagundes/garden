@@ -1,42 +1,44 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Layout from "../../../../components/Layout";
-import { Field, Form, Formik } from "formik";
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import { InputNumber } from 'primereact/inputnumber';
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
+import { InputNumber } from "primereact/inputnumber";
 import { setActivity } from "../../../../services/activities-services";
 import { parseCookies } from "nookies";
 import { getPlantByIdRequest } from "../../../../services/plant-services";
 import Router from "next/router";
+import { Toast } from "primereact/toast";
 
 export async function getServerSideProps(ctx: any) {
-  const { ['auth.token']: token } = parseCookies(ctx);
+  const { ["auth.token"]: token } = parseCookies(ctx);
   if (!token) {
     return {
       redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    }
+        destination: "/login",
+        permanent: false,
+      },
+    };
   }
 
   const id = ctx.query.id;
 
   return {
-    props: { id }
-  }
+    props: { id },
+  };
 }
 interface Props {
-  id: string
+  id: string;
 }
 
 export default function RegisterActivity({ id }: Props) {
-
-  //PrimeReact
-  const [selectedActivity, setSelectedActivity] = useState(null)
+  const toast = useRef(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedPeriodQt, setSelectedPeriodQt] = useState(1);
-  const [selectedPeriod, setSelectedPeriod] = useState(null)
-  const [selectedDate, setSelectedDate] = useState<Date | Date[] | undefined>(undefined);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<Date | Date[] | undefined>(
+    undefined
+  );
 
   const activities = [
     { name: "Regar", key: "regar" },
@@ -44,37 +46,41 @@ export default function RegisterActivity({ id }: Props) {
     { name: "Imersao", key: "imersao" },
     { name: "Umidificacao", key: "umidificacao" },
     { name: "Transplante", key: "transplante" },
-  ]
+  ];
   const period = [
     { name: "Dia", key: "dia" },
     { name: "Semana", key: "semana" },
     { name: "Mês", key: "mes" },
-  ]
+  ];
 
-  //Date
   let today = new Date();
   let month = today.getMonth();
   let year = today.getFullYear();
-  let prevMonth = (month === 0) ? 11 : month - 1;
-  let prevYear = (prevMonth === 11) ? year - 1 : year;
-
-
+  let prevMonth = month === 0 ? 11 : month - 1;
+  let prevYear = prevMonth === 11 ? year - 1 : year;
 
   let minDate = new Date();
   minDate.setMonth(prevMonth);
   minDate.setFullYear(prevYear);
 
-
-
-  //Formik
   const initialValues = {
     plantId: id,
-    activity: '',
-    period: '',
-    period_qd: '',
-    initial_event: '',
-    notes: '',
-  }
+    activity: "",
+    period: "",
+    period_qd: "",
+    initial_event: "",
+    notes: "",
+  };
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
+
   async function handleCreateActivity(data: any) {
     try {
       data.activity = selectedActivity.key;
@@ -82,41 +88,78 @@ export default function RegisterActivity({ id }: Props) {
       data.initial_event = selectedDate;
       data.period_qd = selectedPeriodQt;
 
-      await setActivity(data)
-      Router.back()
+      await setActivity(data);
+      Router.back();
     } catch (err) {
-      console.log(err);
+      const errorMessage = err.response.data.message;
+      showError(errorMessage);
     }
   }
- 
+
   return (
-    <Layout title="New Activity">
+    <Layout title="Nova atividade">
       <Formik initialValues={initialValues} onSubmit={handleCreateActivity}>
         <Form>
-
-          <div   >
+          <div className="flex flex-col gap-3">
             <div>
               <label htmlFor="activity">Atividade</label>
-              <Dropdown className="w-full" id="activity" value={selectedActivity} options={activities} onChange={(e) => setSelectedActivity(e.value)} optionLabel="name" placeholder="Selecione a atividade" />
+              <Dropdown
+                className="w-full"
+                id="activity"
+                value={selectedActivity}
+                options={activities}
+                onChange={(e) => setSelectedActivity(e.value)}
+                optionLabel="name"
+                placeholder="Selecione a atividade"
+              />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label htmlFor="periodo_qd">Repetição </label>
-                <InputNumber className="w-full" inputId="periodo_qd" value={selectedPeriodQt} onValueChange={(e) => setSelectedPeriodQt(e.value)} mode="decimal" showButtons min={1} max={6} />
-              </div>
-
-              <div>
-                <label htmlFor="period">Período</label>
-                <Dropdown className="w-full" id="period" value={selectedPeriod} options={period} onChange={(e) => setSelectedPeriod(e.value)} optionLabel="name" placeholder="Selecione o período" />
+            <div>
+              <label htmlFor="periodo_qd">Repetição</label>
+              <div className="flex flex-row justify-between items-center">
+                <InputNumber
+                  className="w-full"
+                  inputId="periodo_qd"
+                  value={selectedPeriodQt}
+                  onValueChange={(e) => setSelectedPeriodQt(e.value)}
+                  mode="decimal"
+                  showButtons
+                  min={1}
+                  max={6}
+                />
+                <label htmlFor="period" className="w-36 text-center">
+                  a cada
+                </label>
+                <Dropdown
+                  className="w-full"
+                  id="period"
+                  value={selectedPeriod}
+                  options={period}
+                  onChange={(e) => setSelectedPeriod(e.value)}
+                  optionLabel="name"
+                  placeholder="Selecione o período"
+                />
               </div>
             </div>
             <div>
               <label htmlFor="date">Data e hora de início</label>
-              <Calendar className="w-full" id="date" value={selectedDate} onChange={(e) => setSelectedDate(e.value)} showTime minDate={today} showIcon={true} dateFormat="dd/mm/yy" />
+              <Calendar
+                className="w-full"
+                id="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.value)}
+                showTime
+                minDate={today}
+                showIcon={true}
+                dateFormat="dd/mm/yy"
+              />
             </div>
             <div>
               <label htmlFor="notes">Anotações</label>
-              <Field component="textarea" id="notes"
+              <Field
+                component="textarea"
+                maxLength={200}
+                rows={2}
+                id="notes"
                 name="notes"
                 type="text"
                 placeholder="Anotações"
@@ -130,13 +173,14 @@ export default function RegisterActivity({ id }: Props) {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full mt-3 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Adicionar tarefa
             </button>
           </div>
         </Form>
       </Formik>
+      <Toast ref={toast} />
     </Layout>
-  )
+  );
 }

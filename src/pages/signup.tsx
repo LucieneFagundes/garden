@@ -1,25 +1,27 @@
-import type { NextPage } from "next";
-import { LockClosedIcon } from "@heroicons/react/outline";
-import { Toast } from "primereact/toast";
+import { ArrowLeftIcon, LoginIcon } from "@heroicons/react/outline";
 import { Formik, Form, Field } from "formik";
+import Image from "next/image";
+import Link from "next/link";
+import { Toast } from "primereact/toast";
 import { useContext, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import Link from "next/link";
-import Image from "next/image";
 import logo from "../public/logo.png";
 
-interface ISignIn {
-  email: string;
-  password: string;
-}
+export default function SignUp() {
+  interface ISignUp {
+    name: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
+  }
 
-const Login: NextPage = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signUp } = useContext(AuthContext);
   const toast = useRef(null);
-
   const initialValues = {
+    name: "",
     email: "",
     password: "",
+    passwordConfirm: "",
   };
 
   const showError = (message: string) => {
@@ -31,11 +33,21 @@ const Login: NextPage = () => {
     });
   };
 
-  async function handleSignIn({ email, password }: ISignIn) {
+  async function handleSignUp({
+    name,
+    email,
+    password,
+    passwordConfirm,
+  }: ISignUp) {
+    if (password !== passwordConfirm) {
+      showError("A senhas devem ser iguais");
+      return;
+    }
+
     try {
-      await signIn({ email, password });
-    } catch (error) {
-      showError(error.response.data.message);
+      await signUp({ name, email, password });
+    } catch (e) {
+      showError(e.response.data.message);
     }
   }
 
@@ -52,18 +64,28 @@ const Login: NextPage = () => {
                 height={190}
                 alt="Logo"
               />
-              <h2 className="mt-6 text-center text-3xl font-light text-gray-900">
+              <h2 className="text-center text-3xl font-light text-gray-900">
                 GARDENE
               </h2>
             </div>
-            <Formik initialValues={initialValues} onSubmit={handleSignIn}>
+            <Formik initialValues={initialValues} onSubmit={handleSignUp}>
               <Form className="mt-4 space-y-6" action="#" method="POST">
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="rounded-md space-y-2">
                   <div>
-                    <label htmlFor="email-address" className="sr-only">
-                      Email address
-                    </label>
+                    <label htmlFor="name" className="sr-only" />
+                    <Field
+                      id="name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      required
+                      className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                      placeholder="Nome"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email-address" className="sr-only" />
                     <Field
                       id="email-address"
                       name="email"
@@ -75,17 +97,25 @@ const Login: NextPage = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="password" className="sr-only">
-                      Password
-                    </label>
+                    <label htmlFor="password" className="sr-only" />
                     <Field
                       id="password"
                       name="password"
                       type="password"
-                      autoComplete="current-password"
                       required
                       className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                       placeholder="Senha"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="passwordConfirm" className="sr-only" />
+                    <Field
+                      id="passwordConfirm"
+                      name="passwordConfirm"
+                      type="password"
+                      required
+                      className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                      placeholder="Confirmação de senha"
                     />
                   </div>
                 </div>
@@ -95,26 +125,19 @@ const Login: NextPage = () => {
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                      <LockClosedIcon
+                      <LoginIcon
                         className="h-5 w-5 text-green-300 group-hover:text-green-100"
                         aria-hidden="true"
                       />
                     </span>
-                    Entrar
+                    Cadastrar-me
                   </button>
                 </div>
-
-                <div className="flex flex-row items-center justify-between pb-2 text-sm font-medium">
-                  <a
-                    href="#"
-                    className="text-green-600 hover:text-green-700 hover:font-bold"
-                    title="In development"
-                  >
-                    Esqueceu a senha?
-                  </a>
-                  <Link href="/signup">
-                    <a className="flex flex-row gap-1 text-green-600 hover:text-green-700 hover:font-bold  ">
-                      Criar uma conta
+                <div className="flex items-center justify-end pb-2 xs:justify-center">
+                  <Link href="/">
+                    <a className="flex flex-row gap-1 text-sm font-medium text-green-600 hover:text-green-700 hover:font-bold">
+                      <ArrowLeftIcon className="w-3" />
+                      Já tenho cadastro
                     </a>
                   </Link>
                 </div>
@@ -126,6 +149,4 @@ const Login: NextPage = () => {
       <Toast ref={toast} />
     </>
   );
-};
-
-export default Login;
+}

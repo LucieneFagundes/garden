@@ -1,11 +1,11 @@
 import { Formik, Form, Field } from "formik";
-import { AppContext } from "next/app";
 import Router from "next/router";
 import { parseCookies } from "nookies";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import { useEffect, useRef, useState } from "react";
 import Layout from "../../../../components/Layout";
 import {
   getActivity,
@@ -52,7 +52,7 @@ export default function UpdateActivity({ data }) {
   const [selectedDate, setSelectedDate] = useState<Date | Date[] | undefined>(
     undefined
   );
-
+  const toast = useRef(null);
   const activities = [
     { name: "Regar", key: "regar" },
     { name: "Fertilizar", key: "fertilizar" },
@@ -117,16 +117,25 @@ export default function UpdateActivity({ data }) {
 
       await setUpdateActivity(data);
       Router.back();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      showError(error.response.data.message);
     }
   }
 
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
+
   return (
-    <Layout title="Edit Activity">
+    <Layout title="Editar atividade">
       <Formik initialValues={initialValues} onSubmit={handleUpdateActivity}>
         <Form>
-          <div>
+          <div className="flex flex-col gap-3">
             <div>
               <label htmlFor="activity">Atividade</label>
               <Dropdown
@@ -139,9 +148,9 @@ export default function UpdateActivity({ data }) {
                 placeholder="Selecione a atividade"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label htmlFor="periodo_qd">Repetição </label>
+            <div>
+              <label htmlFor="periodo_qd">Repetição </label>
+              <div className="flex flex-row justify-between items-center">
                 <InputNumber
                   className="w-full"
                   inputId="periodo_qd"
@@ -152,10 +161,9 @@ export default function UpdateActivity({ data }) {
                   min={1}
                   max={6}
                 />
-              </div>
-
-              <div>
-                <label htmlFor="period">Período</label>
+                <label htmlFor="period" className="w-36 text-center">
+                  a cada
+                </label>
                 <Dropdown
                   className="w-full"
                   id="period"
@@ -190,21 +198,21 @@ export default function UpdateActivity({ data }) {
                 placeholder="Anotações"
                 className="appearance-none relative block w-full px-3 py-2 mt-1 border
                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none
-                focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm
-          line"
+                focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm line"
               />
             </div>
           </div>
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full mt-3 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Adicionar tarefa
             </button>
           </div>
         </Form>
       </Formik>
+      <Toast ref={toast} />
     </Layout>
   );
 }

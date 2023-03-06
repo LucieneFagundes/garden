@@ -1,71 +1,69 @@
-import { Formik, Form, Field, isEmptyArray } from "formik";
+import { Formik, Form, Field } from "formik";
 import Router from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Layout from "../../components/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
 import { setNewPlant } from "../../services/plant-services";
 import noImage from "../../public/noImage.png";
 import Image from "next/image";
 import { getBase64Image } from "../../utils/utils";
+import { Toast } from "primereact/toast";
 
 interface IPlant {
-  name: string
-  species?: string
-  notes?: string
-  photo?: string | ArrayBuffer
+  name: string;
+  species?: string;
+  notes?: string;
+  photo?: string | ArrayBuffer;
   userId: string;
 }
 
 export default function CreatePlant() {
-  //TODO : Melhorar a estrutura de upload, e tornar um componente
   const { user } = useContext(AuthContext);
-  const [image, setImage] = useState(undefined);
+  const toast = useRef(null);
   const [photo, setPhoto] = useState(undefined);
-  const [preview, setPreview] = useState(undefined);
-
-  useEffect(() => {
-    if (!image) {
-      setPreview(noImage)
-      return
-    }
-    const objectUrl = URL.createObjectURL(image)
-    setPreview(objectUrl)
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [image])
 
   const initialValues: IPlant = {
-    name: '',
-    species: '',
-    notes: '',
-    photo: '',
-    userId: user?.id
-  }
+    name: "",
+    species: "",
+    notes: "",
+    photo: "",
+    userId: user?.id,
+  };
+
+  const showError = (message: string) => {
+    toast.current.show({
+      severity: "error",
+      summary: "Algo deu errado",
+      detail: message,
+      life: 5000,
+    });
+  };
 
   async function handleChange(event: any) {
     event.preventDefault();
 
     if (!event.target.files || event.target.files.length === 0) {
-      setImage(noImage)
-      return
+      setPhoto(undefined);
+      return;
     }
-    setImage(event.target.files[0])
 
     const file = event.target.files[0];
     const fileBase64 = await getBase64Image(file);
     setPhoto(fileBase64);
   }
 
-  //FUNCIONANDO
   async function handleCreate(plant: IPlant) {
-    //TODO: Fazer tratativa de campos vazios para null no backend.
-    try {
+    if (photo) {
       plant.photo = photo.toString();
-    } catch (error) {
-      console.log(error);
     }
-    plant.userId = user.id;
-    await setNewPlant(plant);
-    Router.push("/plants")
+    try {
+      plant.userId = user.id;
+      await setNewPlant(plant);
+      Router.push("/plants");
+    } catch (e) {
+      const errorMessage = e.response.data.message;
+      showError(errorMessage);
+    }
   }
 
   return (
@@ -73,35 +71,32 @@ export default function CreatePlant() {
       <Layout title="Cadastrar nova planta">
         <Formik initialValues={initialValues} onSubmit={handleCreate}>
           <Form action="#" method="POST">
-
-            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap">
-              {/* PARTE DA FOTO E PREVIEW */}
-              {/* TODO: Impedir imagens com tamanho maior do que o especificado */}
-              {/* TODO: Botão de remoção de imagem do input */}
-              {/* TODO: Redimencionar imagem antes de salvar */}
-              <div className="flex flex-col w-auto items-center">
-                <div className="border-solid  border-indigo-600">
-                  <Image src={preview != undefined ? preview : noImage}
-                    width={300} height={300} alt="previewImage"
-                    objectFit="cover"
-                    className="rounded-xl"
-                  />
-                </div>
-                <input id="photo"
+            <div className="flex flex-row justify-around py-4 px-auto sm:flex-wrap xs:flex-wrap">
+              <div className="flex flex-col w-auto items-center xs:w-3/4 gap-2">
+                <Image
+                  src={photo ? photo : noImage}
+                  width={300}
+                  height={300}
+                  alt="previewImage"
+                  objectFit="cover"
+                  className="rounded-xl"
+                />
+                <input
+                  id="photo"
                   name="photo"
                   type="file"
                   accept="image/jpg, image/png, image/jpeg"
+                  capture
                   onChange={(e) => handleChange(e)}
-                  // size={5000000}
                   className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-indigo-600
                   hover:file:bg-violet-10"
                 />
               </div>
-
-              {/* PARTE DO RESTANTE DO FORMULÁRIO */}
-              <div className="rounded-md space-y-2 w-full max-w-lg">
+              <div className="rounded-md space-y-2 w-full max-w-lg xs:pt-3">
                 <div>
-                  <label htmlFor="name" className="">Nome <span>*</span></label>
+                  <label htmlFor="name" className="">
+                    Nome <span>*</span>
+                  </label>
                   <Field
                     id="name"
                     name="name"
@@ -113,7 +108,9 @@ export default function CreatePlant() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="species" className="">Espécie</label>
+                  <label htmlFor="species" className="">
+                    Espécie
+                  </label>
                   <Field
                     id="species"
                     name="species"
@@ -124,8 +121,11 @@ export default function CreatePlant() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="notes" className="">Anotações</label>
-                  <Field component="textarea"
+                  <label htmlFor="notes" className="">
+                    Anotações
+                  </label>
+                  <Field
+                    component="textarea"
                     id="notes"
                     name="notes"
                     type="text"
@@ -144,12 +144,11 @@ export default function CreatePlant() {
                   </button>
                 </div>
               </div>
-
             </div>
-
           </Form>
         </Formik>
+        <Toast ref={toast} />
       </Layout>
     </>
-  )
+  );
 }
